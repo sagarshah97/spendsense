@@ -67,7 +67,12 @@ export default function DrawerAppBar(props) {
     <>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBar component="nav" style={{ backgroundColor: "#262626" }}>
+        <AppBar
+          component="nav"
+          style={{
+            backgroundColor: "#262626",
+          }}
+        >
           <Toolbar>
             <IconButton
               color="inherit"
@@ -81,7 +86,7 @@ export default function DrawerAppBar(props) {
             <Typography
               variant="h6"
               component="div"
-              sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+              sx={{ flexGrow: 1, display: { xs: "none", sm: "block" }, pt: 1 }}
             >
               <img src={logo} alt="" width={150} />
             </Typography>
