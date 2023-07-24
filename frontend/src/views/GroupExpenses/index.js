@@ -5,9 +5,12 @@ import MemberSearchModal from "../NewGroupModal/index";
 import ExpenseGraph from "../DisplayTrend/index";
 import FAQ from "../FAQ/index";
 import ContactUsPage from "../ContactUs";
+import { useNavigate } from "react-router-dom";
 
 const App = () => {
   const currentUser = "John Wick";
+
+  const navigate = useNavigate();
 
   const [groups, setGroups] = useState([
     {
@@ -101,6 +104,22 @@ const App = () => {
                 fullWidth
               >
                 View Spending Trend
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  // Redirect to the "/personal" page
+                  navigate("/personal");
+                  setViewTrends(true);
+                  setIsExpSplitterOpen(false);
+                  setFaq(false);
+                  setContactUs(false);
+                }}
+                fullWidth
+              >
+                Personal Expense Tracker
               </Button>
             </Grid>
             <Grid item xs={12} sm={12} md={12} lg={12}>
