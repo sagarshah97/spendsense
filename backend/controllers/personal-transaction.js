@@ -23,4 +23,26 @@ const addPersonalTransaction = async (req, res) => {
     });
 };
 
+const getPersonalTransaction = async (req, res) => {
+  const transactionId = req.params.transactionId;
+  Transaction.findOne({ transactionId: transactionId })
+    .then((transaction) => {
+      if (!transaction) {
+        res
+          .status(404)
+          .json({ message: "Transaction not found", success: false });
+      } else {
+        res.status(200).json({
+          message: "Transaction successfully retrived",
+          success: true,
+          transaction: transaction,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+};
+
 module.exports = addPersonalTransaction;
+module.exports = getPersonalTransaction;
