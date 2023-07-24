@@ -19,5 +19,8 @@ router
 router
   .route("/personalTransaction/update/:transactionId")
   .put(personalTransactionController.updatePersonalTransaction);
+router
+  .route("/personalTransaction/delete/:transactionId")
+  .delete(personalTransactionController.deletePersonalTransaction);
 
 module.exports = router;

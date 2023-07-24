@@ -103,9 +103,32 @@ const updatePersonalTransaction = async (req, res) => {
     });
 };
 
+const deletePersonalTransaction = async (req, res) => {
+  const transactionId = req.params.transactionId;
+
+  Transaction.findOneAndDelete({ transactionId: transactionId })
+    .then((deletedTransaction) => {
+      if (!deletedTransaction) {
+        res
+          .status(404)
+          .json({ message: "Transaction not found", success: false });
+      } else {
+        res.status(200).json({
+          message: "Transaction deleted successfully",
+          success: true,
+          transaction: deletedTransaction,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+};
+
 module.exports = {
   addPersonalTransaction,
   getPersonalTransaction,
   getPersonalTransactions,
   updatePersonalTransaction,
+  deletePersonalTransaction,
 };
