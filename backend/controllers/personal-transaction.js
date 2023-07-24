@@ -44,5 +44,26 @@ const getPersonalTransaction = async (req, res) => {
     });
 };
 
+const getPersonalTransactions = async (req, res) => {
+  Transaction.find()
+    .exec()
+    .then((transactions) => {
+      if (!transactions || !transactions.length) {
+        return res
+          .status(404)
+          .json({ success: false, data: "No Transactions found!" });
+      }
+      return res.status(200).json({
+        message: "Transactions retrived",
+        success: true,
+        transactions: transactions,
+      });
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+};
+
 module.exports = addPersonalTransaction;
 module.exports = getPersonalTransaction;
+module.exports = getPersonalTransactions;
