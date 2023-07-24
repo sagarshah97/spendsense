@@ -64,6 +64,48 @@ const getPersonalTransactions = async (req, res) => {
     });
 };
 
-module.exports = addPersonalTransaction;
-module.exports = getPersonalTransaction;
-module.exports = getPersonalTransactions;
+const updatePersonalTransaction = async (req, res) => {
+  const transactionId = req.params.transactionId;
+  const { date, amount, category, note, typeOfTransaction } = req.body;
+
+  Transaction.findOneAndUpdate(
+    { transactionId: transactionId },
+    { date, amount, category, note, typeOfTransaction, transactionId },
+    { new: true }
+  )
+    .then((updatedTransaction) => {
+      if (!updatedTransaction) {
+        res
+          .status(404)
+          .json({ message: "Transaction not found", success: false });
+      } else if (
+        !date ||
+        !amount ||
+        !category ||
+        !note ||
+        !typeOfTransaction ||
+        !transactionId
+      ) {
+        res.status(400).json({
+          message: "Missing required Transaction data fields",
+          success: false,
+        });
+      } else {
+        res.status(200).json({
+          message: "Transaction updated successfully",
+          success: true,
+          transaction: updatedTransaction,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+};
+
+module.exports = {
+  addPersonalTransaction,
+  getPersonalTransaction,
+  getPersonalTransactions,
+  updatePersonalTransaction,
+};
