@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import MemberSearchModal from "../NewGroupModal/index";
 import {
   FormControl,
@@ -23,6 +23,12 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
   const [proportions, setProportions] = useState({});
   const [splitAmounts, setSplitAmounts] = useState([]);
   const [proportionError, setProportionError] = useState(false);
+  const [date, setDate] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [category, setCategory] = useState("");
+  const [note, setNote] = useState("");
+
+  const [disableSubmit, setDisableSubmit] = useState(true);
 
   const handleGroupChange = (event) => {
     setSelectedGroup(event.target.value);
@@ -48,7 +54,7 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
   };
 
   const handleSplit = () => {
-    const totalExpense = 100; //todo: Total expense amount
+    const totalExpense = amount;
     const group = groups.find((grp) => grp.id === selectedGroup);
     if (!group) return;
 
@@ -245,102 +251,215 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
     );
   };
 
+  const renderExpenseInput = () => {
+    const handleDateChange = (event) => {
+      setDate(event.target.value);
+    };
+
+    const handleAmountChange = (event) => {
+      setAmount(event.target.value);
+    };
+
+    const handleCategoryChange = (event) => {
+      setCategory(event.target.value);
+    };
+
+    const handleNoteChange = (event) => {
+      setNote(event.target.value);
+    };
+
+    return (
+      <>
+        <TextField
+          type="date"
+          value={date}
+          onChange={handleDateChange}
+          fullWidth
+          margin="normal"
+          variant="outlined"
+        />
+        <TextField
+          label="Amount"
+          type="number"
+          value={amount}
+          onChange={handleAmountChange}
+          fullWidth
+          margin="normal"
+          variant="outlined"
+        />
+        <FormControl fullWidth margin="normal" variant="outlined">
+          <InputLabel id="category-label">Category</InputLabel>
+          <Select
+            labelId="category-label"
+            label="Category"
+            value={category}
+            onChange={handleCategoryChange}
+          >
+            <MenuItem value="Grocery">Grocery</MenuItem>
+            <MenuItem value="Restaurant">Restaurant</MenuItem>
+            <MenuItem value="Rent">Rent</MenuItem>
+            <MenuItem value="Transportation">Transportation</MenuItem>
+            <MenuItem value="Entertainment">Entertainment</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          label="Note"
+          multiline
+          rows={4}
+          value={note}
+          onChange={handleNoteChange}
+          fullWidth
+          margin="normal"
+          variant="outlined"
+        />
+      </>
+    );
+  };
+
+  const handleSubmit = () => {
+    const groupExpense = {
+      group: selectedGroup,
+      split: splitOption,
+      proportions,
+      splitAmounts,
+      date,
+      amount,
+      category,
+      note,
+    };
+
+    console.log(groupExpense);
+  };
+
+  useEffect(() => {
+    verifyDetails();
+  }, [selectedGroup, splitOption, splitAmounts, date, amount, category, note]);
+
+  const verifyDetails = () => {
+    if (
+      selectedGroup &&
+      splitOption &&
+      splitAmounts.length &&
+      date &&
+      amount &&
+      category &&
+      note
+    ) {
+      setDisableSubmit(false);
+    } else {
+      setDisableSubmit(true);
+    }
+  };
+
   return (
     <>
-      <Box style={{ paddingTop: "3%" }}>
-        <Container
+      <Box style={{}}>
+        {/* <Container
           maxWidth="md"
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
-        >
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={8} md={8} lg={8}>
-              <FormControl fullWidth>
-                <InputLabel id="group-label">Select a Group</InputLabel>
-                <Select
-                  labelId="group-label"
-                  id="group-select"
-                  label="Select a Group"
-                  value={selectedGroup}
-                  onChange={handleGroupChange}
-                >
-                  {groups.map((group) => (
-                    <MenuItem key={group.id} value={group.id}>
-                      {group.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <Button
-                variant="outlined"
-                onClick={handleCreateGroup}
-                fullWidth
-                style={{ height: "56px" }}
-              >
-                Create New Group
-              </Button>
-            </Grid>
+        > */}
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            {renderExpenseInput()}
           </Grid>
-        </Container>
+          <Grid item xs={12} sm={8} md={8} lg={8}>
+            <FormControl fullWidth>
+              <InputLabel id="group-label">Select a Group</InputLabel>
+              <Select
+                labelId="group-label"
+                id="group-select"
+                label="Select a Group"
+                value={selectedGroup}
+                onChange={handleGroupChange}
+              >
+                {groups.map((group) => (
+                  <MenuItem key={group.id} value={group.id}>
+                    {group.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={4} md={4} lg={4}>
+            <Button
+              variant="outlined"
+              onClick={handleCreateGroup}
+              fullWidth
+              style={{ height: "56px" }}
+            >
+              New Group
+            </Button>
+          </Grid>
+        </Grid>
+        {/* </Container> */}
       </Box>
       {selectedGroup && (
         <>
           <Box style={{ paddingTop: "3%" }}>
-            <Container
+            {/* <Container
               maxWidth="md"
               style={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
               }}
-            >
-              <Grid container spacing={2}>
-                <Grid item xs={12} lg={12} md={12} sm={12}>
-                  {renderMembers()}
-                </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  lg={12}
-                  md={12}
-                  sm={12}
-                  style={{ paddingTop: "5%" }}
-                >
-                  {renderSplitOption()}
-                </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  lg={12}
-                  md={12}
-                  sm={12}
-                  style={{ paddingTop: "2%" }}
-                >
-                  {renderProportions()}
-                </Grid>
+            > */}
+            <Grid container spacing={2}>
+              <Grid item xs={12} lg={12} md={12} sm={12}>
+                {renderMembers()}
               </Grid>
-            </Container>
+              <Grid
+                item
+                xs={12}
+                lg={12}
+                md={12}
+                sm={12}
+                style={{ paddingTop: "5%" }}
+              >
+                {renderSplitOption()}
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                lg={12}
+                md={12}
+                sm={12}
+                style={{ paddingTop: "2%" }}
+              >
+                {renderProportions()}
+              </Grid>
+            </Grid>
+            {/* </Container> */}
           </Box>
           <Box style={{ paddingTop: "3%" }}>
-            <Container
+            {/* <Container
               maxWidth="md"
               style={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
               }}
-            >
-              <Grid container spacing={2}>
-                <Grid item xs={12} lg={12} md={12} sm={12}>
-                  {renderSplitAmounts()}
-                </Grid>
+            > */}
+            <Grid container spacing={2}>
+              <Grid item xs={12} lg={12} md={12} sm={12}>
+                {renderSplitAmounts()}
               </Grid>
-            </Container>
+              <Grid item xs={12} style={{ paddingTop: "5%" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                  disabled={disableSubmit}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
+            {/* </Container> */}
           </Box>
         </>
       )}
