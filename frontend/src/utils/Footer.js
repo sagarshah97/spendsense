@@ -1,18 +1,10 @@
 import React from "react";
-import {
-  Container,
-  Grid,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import Logo from "../assets/logoWhite.png";
 import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
   const navigate = useNavigate();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <footer
@@ -32,7 +24,11 @@ const Footer = () => {
             <img src={Logo} alt="Logo" style={{ height: 30, width: "auto" }} />
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography variant="body2" align="center">
+            <Typography
+              variant="body2"
+              align="center"
+              style={{ overflowWrap: "anywhere" }}
+            >
               <span onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
                 Home
               </span>
@@ -51,6 +47,22 @@ const Footer = () => {
                 }}
               >
                 Contact
+              </span>
+              <span
+                style={{
+                  paddingLeft: "2%",
+                  paddingRight: "2%",
+                }}
+              >
+                |
+              </span>
+              <span
+                onClick={() => navigate("/faq")}
+                style={{
+                  cursor: "pointer",
+                }}
+              >
+                FAQ
               </span>
             </Typography>
           </Grid>
