@@ -1,4 +1,4 @@
-import Router from "./utils/Routes";
+import Router from "./Routes";
 import { BrowserRouter } from "react-router-dom";
 
 function App() {
