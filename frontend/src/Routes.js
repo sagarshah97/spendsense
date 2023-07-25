@@ -6,6 +6,7 @@ import NavBar from "./utils/NavBar";
 import PersonalTransaction from "./views/PersonalTransaction/PersonalTransaction";
 import AddTransaction from "./views/PersonalTransaction/AddTransaction";
 import GroupExpenseDashboard from "./views/GroupExpensesDashboard";
+import GroupHistory from "./views/GroupHistory";
 const Router = () => {
   const location = useLocation();
   return (
@@ -19,6 +20,7 @@ const Router = () => {
           path="/GroupExpenseDashboard"
           element={<GroupExpenseDashboard />}
         />
+        <Route path="/GroupHistory" element={<GroupHistory />} />
       </Route>
     </Routes>
   );
