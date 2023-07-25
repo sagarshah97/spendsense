@@ -5,7 +5,7 @@ import Contact from "./views/ContactUs/index";
 import NavBar from "./utils/NavBar";
 import PersonalTransaction from "./views/PersonalTransaction/PersonalTransaction";
 import AddTransaction from "./views/PersonalTransaction/AddTransaction";
-
+import GroupExpenseDashboard from "./views/GroupExpensesDashboard";
 const Router = () => {
   const location = useLocation();
   return (
@@ -15,6 +15,10 @@ const Router = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/personal" element={<PersonalTransaction />} />
         <Route path="/addTransaction" element={<AddTransaction />} />
+        <Route
+          path="/GroupExpenseDashboard"
+          element={<GroupExpenseDashboard />}
+        />
       </Route>
     </Routes>
   );
