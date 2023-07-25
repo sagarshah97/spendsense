@@ -43,7 +43,7 @@ const GroupExpenseDashboard = () => {
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: "75%", margin: "0 auto" }}>
       <Typography variant="h4" align="center" gutterBottom>
         Group Expenses Dashboard
       </Typography>
@@ -51,7 +51,7 @@ const GroupExpenseDashboard = () => {
         <Grid item xs={12} sm={6}>
           <Card elevation={3}>
             <CardContent>
-              <Typography variant="h5">
+              <Typography variant="h5" sx={{ paddingBottom: 2 }}>
                 What I Owe - Total:{" "}
                 <span style={{ color: "red" }}>${totalOwe}</span>
               </Typography>
@@ -97,7 +97,7 @@ const GroupExpenseDashboard = () => {
         <Grid item xs={12} sm={6}>
           <Card elevation={3}>
             <CardContent>
-              <Typography variant="h5">
+              <Typography variant="h5" sx={{ paddingBottom: 2 }}>
                 What I'm Owed - Total:{" "}
                 <span style={{ color: "green" }}>${totalOwed}</span>
               </Typography>
