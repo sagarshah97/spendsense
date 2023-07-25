@@ -17,8 +17,11 @@ import {
   FormControl,
   styled,
   Grid,
+  Container,
 } from "@mui/material";
 import axios from "axios";
+import ExpenseSplitter from "../ExpenseSplitter/index";
+import MemberSearchModal from "../NewGroupModal/index";
 
 const ExpensePage = ({ handleExpenseSubmit }) => {
   const [amount, setAmount] = useState(0);
@@ -77,7 +80,7 @@ const ExpensePage = ({ handleExpenseSubmit }) => {
 
   return (
     <div className="page-container">
-      <h1>Expense</h1>
+      <h1 style={{ overflowWrap: "anywhere" }}>Expense</h1>
 
       <Slider {...settings}>
         <div>
@@ -85,29 +88,30 @@ const ExpensePage = ({ handleExpenseSubmit }) => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel htmlFor="date">Date</InputLabel>
+                  {/* <InputLabel htmlFor="date">Date</InputLabel> */}
                   <TextField
                     type="date"
                     id="date"
                     value={date}
                     onChange={handleDateChange}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
+                    // InputLabelProps={{
+                    //   shrink: true,
+                    // }}
                   />
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel htmlFor="amount">Amount</InputLabel>
+                  {/* <InputLabel htmlFor="amount">Amount</InputLabel> */}
                   <TextField
                     type="number"
+                    label="Amount"
                     id="amount"
                     value={amount}
                     onChange={handleAmountChange}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
+                    // InputLabelProps={{
+                    //   shrink: true,
+                    // }}
                   />
                 </FormControl>
               </Grid>
@@ -116,10 +120,10 @@ const ExpensePage = ({ handleExpenseSubmit }) => {
                   <InputLabel htmlFor="category">Category</InputLabel>
                   <Select
                     id="category"
+                    label="Category"
                     value={category}
                     onChange={handleCategoryChange}
                   >
-                    <MenuItem value="">Select a category</MenuItem>
                     <MenuItem value="Grocery">Grocery</MenuItem>
                     <MenuItem value="Restaurant">Restaurant</MenuItem>
                     <MenuItem value="Rent">Rent</MenuItem>
@@ -213,7 +217,7 @@ const IncomePage = ({ handleIncomeSubmit }) => {
 
   return (
     <div className="page-container">
-      <h1>Income</h1>
+      <h1 style={{ overflowWrap: "anywhere" }}>Income</h1>
 
       <Slider {...settings}>
         <div>
@@ -221,24 +225,25 @@ const IncomePage = ({ handleIncomeSubmit }) => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel htmlFor="date">Date</InputLabel>
+                  {/* <InputLabel htmlFor="date">Date</InputLabel> */}
                   <TextField
                     type="date"
                     id="date"
                     value={date}
                     onChange={handleDateChange}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
+                    // InputLabelProps={{
+                    //   shrink: true,
+                    // }}
                   />
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel htmlFor="amount">Amount</InputLabel>
+                  {/* <InputLabel htmlFor="amount">Amount</InputLabel> */}
                   <TextField
                     type="number"
                     id="amount"
+                    label="Amount"
                     value={amount}
                     onChange={handleAmountChange}
                     InputLabelProps={{
@@ -288,6 +293,92 @@ const IncomePage = ({ handleIncomeSubmit }) => {
         </div>
       </Slider>
     </div>
+  );
+};
+
+const GroupExpensePage = ({ handleExpenseSubmit }) => {
+  const currentUser = "John Wick";
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [groups, setGroups] = useState([
+    {
+      id: 1,
+      name: "Group A",
+      members: ["John Wick", "Jake Peralta", "Alice Smith", "Kate Winslet"],
+    },
+    {
+      id: 2,
+      name: "Group B",
+      members: [
+        "John Wick",
+        "Bob Murray",
+        "Charlie Chaplin",
+        "Evangeline Lily",
+      ],
+    },
+    {
+      id: 3,
+      name: "Group C",
+      members: ["Mike Ross", "John Wick", "Sarah Connor", "Tom Felton"],
+    },
+  ]);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleGroupSubmit = (groupDetails) => {
+    console.log(groupDetails);
+    const newGroup = {
+      id: groups[groups.length - 1].id + 1,
+      name: groupDetails.name,
+      members: groupDetails.addedMembers.concat(currentUser),
+    };
+
+    setGroups((prevGroups) => [...prevGroups, newGroup]);
+  };
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  };
+
+  return (
+    <>
+      <div className="page-container">
+        <h1 style={{ overflowWrap: "anywhere" }}>Shared Expense</h1>
+
+        <Slider {...settings}>
+          <div>
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <ExpenseSplitter
+                    groups={groups}
+                    handleOpenModal={handleOpenModal}
+                  />
+                  <MemberSearchModal
+                    open={isModalOpen}
+                    handleClose={handleCloseModal}
+                    handleGroupSubmit={handleGroupSubmit}
+                  />
+                </Grid>
+              </Grid>
+            </form>
+          </div>
+        </Slider>
+      </div>
+    </>
   );
 };
 
@@ -342,26 +433,51 @@ const AddTransaction = () => {
     setIncomes([...incomes, income]);
   };
 
+  const handleGroupExpenseSubmit = (expense) => {
+    console.log(expense);
+  };
+
   return (
     <div className="tracker-container">
-      <Box sx={{ width: "50%" }}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="basic tabs example"
-          >
-            <Tab label="+ Add Expense" {...a11yProps(0)} />
-            <Tab label="+ Add Income" {...a11yProps(1)} />
-          </Tabs>
-        </Box>
-        <CustomTabPanel value={value} index={0}>
-          <ExpensePage handleExpenseSubmit={handleExpenseSubmit} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-          <IncomePage handleIncomeSubmit={handleIncomeSubmit} />
-        </CustomTabPanel>
-      </Box>
+      <Grid
+        container
+        spacing={1}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Grid item xs={12} sm={12} md={8} lg={6}>
+          <Box sx={{ width: "100%" }}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Add Expense" {...a11yProps(0)} />
+                <Tab label="Add Income" {...a11yProps(1)} />
+                <Tab label="Add Group Expense" {...a11yProps(2)} />
+              </Tabs>
+            </Box>
+
+            <CustomTabPanel value={value} index={0}>
+              <ExpensePage handleExpenseSubmit={handleExpenseSubmit} />
+            </CustomTabPanel>
+
+            <CustomTabPanel value={value} index={1}>
+              <IncomePage handleIncomeSubmit={handleIncomeSubmit} />
+            </CustomTabPanel>
+
+            <CustomTabPanel value={value} index={2}>
+              <GroupExpensePage
+                handleGroupExpenseSubmit={handleGroupExpenseSubmit}
+              />
+            </CustomTabPanel>
+          </Box>
+        </Grid>
+      </Grid>
     </div>
   );
 };
