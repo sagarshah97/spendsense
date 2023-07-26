@@ -19,12 +19,12 @@ const groupTransactions = new Schema({
     trim: true,
   },
   paidByUserId: {
-    type: Number,
+    type: String,
     required: true,
     trim: true,
   },
   userId: {
-    type: Number,
+    type: String,
     required: true,
     trim: true,
   },

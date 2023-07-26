@@ -2,7 +2,7 @@ const groupTransaction = require("../models/groupTransactions");
 const uuid = require("uuid");
 
 const addGroupTransaction = async (req, res) => {
-  const currentUserId = 123;
+  const currentUserId = "123";
   const transactionId = uuid.v4();
   try {
     let transactionData = {
@@ -10,8 +10,8 @@ const addGroupTransaction = async (req, res) => {
       note: "test",
       date: "2023-07-25",
       splitAmounts: [
-        { userid: 1, amount: 50 },
-        { userid: 2, amount: 50 },
+        { userid: "1", amount: 50 },
+        { userid: "2", amount: 50 },
       ],
     }; //req.body.transactiondata; //[{},{}]
     const transactions = transactionData.splitAmounts.map((splitAmount) => {
