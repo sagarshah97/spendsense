@@ -2,6 +2,9 @@ import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Contact from "./views/ContactUs";
 import FAQ from "./views/FAQ";
+import Login from "./views/Login";
+import Registration from "./views/Registration";
+import Password from "./views/PasswordReset";
 import NavBar from "./utils/NavBar";
 import PersonalTransaction from "./views/PersonalTransaction/PersonalTransaction";
 import AddTransaction from "./views/PersonalTransaction/AddTransaction";
@@ -16,6 +19,10 @@ const Router = () => {
     <Routes location={location} key={location.pathname}>
       <Route path="/" element={<NavBar />}>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<Dummy />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Registration />} />
+        <Route path="/passwordreset" element={<Password />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/personal" element={<PersonalTransaction />} />
