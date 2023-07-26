@@ -2,6 +2,7 @@ const groupTransaction = require("../models/groupTransactions");
 const group = require("../models/groups");
 const uuid = require("uuid");
 const mongoose = require("mongoose");
+const User = require("../models/user-model");
 
 const addGroupTransaction = async (req, res) => {
   const currentUserId = "123";
@@ -60,9 +61,11 @@ const userAmountData = async (req, res) => {
       let groupDetails = await group.find({
         _id: new mongoose.Types.ObjectId(transaction.groupId),
       });
-      let user = {}; //await user.findById();
+      let user = await User.find({
+        _id: new mongoose.Types.ObjectId(transaction.userId),
+      });
       let groupName = groupDetails[0].name;
-      let name = "testname"; //user.name;
+      let name = user[0].firstname + " " + user[0].lastname;
       result.whatImOwed.push({ name, amount, group: groupName });
     }
 
@@ -71,13 +74,16 @@ const userAmountData = async (req, res) => {
       let groupDetails = await group.find({
         _id: new mongoose.Types.ObjectId(transaction.groupId),
       });
-      let user = {}; //await user.findById();
+      let user = await User.find({
+        _id: new mongoose.Types.ObjectId(transaction.paidByUserId),
+      });
       let groupName = groupDetails.name;
-      let name = "testname"; //user.name;
+      let name = user[0].firstname + " " + user[0].lastname;
       result.whatIOwe.push({ name, amount, group: groupName });
     }
-
-    console.log(result);
+    res.status(200).json({
+      result: result,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({
