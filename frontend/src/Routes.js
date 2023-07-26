@@ -12,6 +12,7 @@ import GroupExpenseDashboard from "./views/GroupExpensesDashboard";
 import GroupHistory from "./views/GroupHistory";
 import LandingPage from "./views/LandingPage";
 import Trends from "./views/DisplayTrend";
+import Profile from "./views/ProfilePage";
 
 const Router = () => {
   const location = useLocation();
@@ -19,7 +20,7 @@ const Router = () => {
     <Routes location={location} key={location.pathname}>
       <Route path="/" element={<NavBar />}>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/" element={<Dummy />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registration />} />
         <Route path="/passwordreset" element={<Password />} />
@@ -33,6 +34,7 @@ const Router = () => {
         />
         <Route path="/GroupHistory" element={<GroupHistory />} />
         <Route path="/trends" element={<Trends />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
     </Routes>
   );
