@@ -19,7 +19,6 @@ const Router = () => {
     <Routes location={location} key={location.pathname}>
       <Route path="/" element={<NavBar />}>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/" element={<Dummy />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registration />} />
         <Route path="/passwordreset" element={<Password />} />

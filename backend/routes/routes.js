@@ -3,7 +3,10 @@ const express = require("express");
 // const findData = require("../controllers/SampleController/find-data");
 const personalTransactionController = require("../controllers/personal-transaction");
 const { addGroup } = require("../controllers/group");
-const { addGroupTransaction } = require("../controllers/group-transaction");
+const {
+  addGroupTransaction,
+  userAmountData,
+} = require("../controllers/group-transaction");
 const userController = require("../controllers/userController");
 
 const router = express.Router();
@@ -30,5 +33,6 @@ router
 
 router.route("/addGroup").post(addGroup);
 router.route("/addGroupTransaction").post(addGroupTransaction);
+router.route("/userAmountData").get(userAmountData);
 
 module.exports = router;
