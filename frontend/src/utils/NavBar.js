@@ -131,7 +131,7 @@ export default function DrawerAppBar(props) {
         <Box
           component="main"
           sx={{
-            p: 1,
+            // p: 1,
             width: "100%",
             minHeight: "100vH",
           }}

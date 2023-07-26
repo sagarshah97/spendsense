@@ -13,7 +13,10 @@ import {
   styled,
   Grid,
   Container,
+  IconButton,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const StyledTableContainer = styled(TableContainer)({
   width: "80%",
@@ -160,7 +163,7 @@ const PersonalTransaction = () => {
                 <TableCell>{item.category}</TableCell>
                 <TableCell>{item.note}</TableCell>
                 <TableCell>
-                  <Button
+                  {/* <Button
                     variant="contained"
                     color="primary"
                     onClick={() => {
@@ -172,16 +175,36 @@ const PersonalTransaction = () => {
                         state: { transactionId: item.transactionId },
                       });
                     }}
+                  > */}
+                  <IconButton
+                    aria-label="edit"
+                    onClick={() => {
+                      const route =
+                        item.typeOfTransaction === "Expense"
+                          ? "/update/expense"
+                          : "/update/income";
+                      navigate(route, {
+                        state: { transactionId: item.transactionId },
+                      });
+                    }}
                   >
-                    Update
-                  </Button>
-                  <Button
+                    <EditIcon />
+                  </IconButton>
+
+                  {/* </Button> */}
+                  {/* <Button
                     variant="contained"
                     color="secondary"
                     onClick={() => handleDelete(item.transactionId)}
                   >
                     Delete
-                  </Button>
+                  </Button> */}
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => handleDelete(item.transactionId)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
