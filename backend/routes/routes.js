@@ -2,6 +2,7 @@ const express = require("express");
 // const addData = require("../controllers/SampleController/add-data");
 // const findData = require("../controllers/SampleController/find-data");
 const personalTransactionController = require("../controllers/personal-transaction");
+const userController = require("../controllers/user");
 const userController = require("../controllers/userController");
 
 const router = express.Router();
@@ -25,5 +26,6 @@ router
 router
   .route("/personalTransaction/delete/:transactionId")
   .delete(personalTransactionController.deletePersonalTransaction);
+router.get("/user/:userId", userController.getUserById);
 
 module.exports = router;
