@@ -1,0 +1,18 @@
+.banner-container {
+  animation: fadeInAnimation 1s ease-in-out;
+  opacity: 1;
+}
+
+.banner-image {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+@keyframes fadeInAnimation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

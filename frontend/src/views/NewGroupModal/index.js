@@ -17,44 +17,56 @@ const MemberSearchModal = ({ open, handleClose, handleGroupSubmit }) => {
   const [memberEmail, setMemberEmail] = useState("");
   const [members, setMembers] = useState([]);
   const [error, setError] = useState("");
-  const [emailError, setEmailError] = useState("");
+
+  const [selectedMember, setSelectedMember] = useState("");
+
+  const [existingMembers, setExistingMembers] = useState([
+    {
+      name: "Pratik Parmar",
+      email: "pratik@example.com",
+    },
+    {
+      name: "Aayush Pandya",
+      email: "aayush@example.com",
+    },
+    {
+      name: "Nikhil Panikassery",
+      email: "nikhil@example.com",
+    },
+    {
+      name: "Siddhesh Salve",
+      email: "siddhesh@example.com",
+    },
+    {
+      name: "Raj Patel",
+      email: "raj@example.com",
+    },
+    {
+      name: "Harsh Vaghani",
+      email: "harsh@example.com",
+    },
+  ]);
 
   const handleGroupNameChange = (event) => {
     setGroupName(event.target.value);
   };
 
-  const validateEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
-
-  const handleMemberEmailChange = (event) => {
+  const handleMemberChange = (event) => {
     const { value } = event.target;
-    setMemberEmail(value);
-
-    if (value) {
-      const isValidEmail = validateEmail(value);
-      if (!isValidEmail) {
-        setEmailError("Invalid email");
-      } else {
-        setEmailError("");
-      }
-    } else {
-      setEmailError("");
-    }
+    setSelectedMember(value);
   };
 
   const handleAddMember = () => {
-    if (memberEmail) {
+    if (selectedMember) {
       const existingMember = members.find(
-        (member) => member.email === memberEmail
+        (member) => member.email === selectedMember
       );
       if (existingMember) {
         setError("Member already added");
         return;
       }
 
-      setMembers([...members, { email: memberEmail }]);
+      setMembers([...members, { email: selectedMember }]);
       setMemberEmail("");
       setError("");
     }
@@ -123,19 +135,22 @@ const MemberSearchModal = ({ open, handleClose, handleGroupSubmit }) => {
             value={groupName}
             onChange={handleGroupNameChange}
           />
-          <TextField
-            label="Member Email"
-            variant="outlined"
-            fullWidth
-            value={memberEmail}
-            onChange={handleMemberEmailChange}
-            sx={{ mt: 2 }}
-          />
-          {emailError && (
-            <Typography color="error" sx={{ mt: 1 }}>
-              {emailError}
-            </Typography>
-          )}
+          <FormControl fullWidth style={{ marginTop: "5%" }}>
+            <InputLabel id="group-label">Select a member</InputLabel>
+            <Select
+              labelId="group-label"
+              id="group-select"
+              label="Select a member"
+              value={selectedMember}
+              onChange={handleMemberChange}
+            >
+              {existingMembers.map((member) => (
+                <MenuItem key={member.email} value={member.email}>
+                  {member.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Button
             variant="contained"
             color="primary"

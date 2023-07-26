@@ -116,7 +116,7 @@ const FAQsPage = () => {
   ];
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" style={{ paddingBottom: "3%" }}>
       <Typography variant="h4" align="left" sx={{ mt: 4, mb: 2 }}>
         Frequently Asked Questions
       </Typography>
