@@ -1,19 +1,23 @@
 import React from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Dummy from "./views/GroupExpenses/index";
-import Contact from "./views/ContactUs/index";
+import Contact from "./views/ContactUs";
+import FAQ from "./views/FAQ";
 import NavBar from "./utils/NavBar";
 import PersonalTransaction from "./views/PersonalTransaction/PersonalTransaction";
 import AddTransaction from "./views/PersonalTransaction/AddTransaction";
 import GroupExpenseDashboard from "./views/GroupExpensesDashboard";
 import GroupHistory from "./views/GroupHistory";
+import LandingPage from "./views/LandingPage";
+import Trends from "./views/DisplayTrend";
+
 const Router = () => {
   const location = useLocation();
   return (
     <Routes location={location} key={location.pathname}>
       <Route path="/" element={<NavBar />}>
-        <Route path="/" element={<Dummy />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/faq" element={<FAQ />} />
         <Route path="/personal" element={<PersonalTransaction />} />
         <Route path="/addTransaction" element={<AddTransaction />} />
         <Route
@@ -21,6 +25,7 @@ const Router = () => {
           element={<GroupExpenseDashboard />}
         />
         <Route path="/GroupHistory" element={<GroupHistory />} />
+        <Route path="/trends" element={<Trends />} />
       </Route>
     </Routes>
   );
