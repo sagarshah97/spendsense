@@ -2,10 +2,10 @@ const express = require("express");
 // const addData = require("../controllers/SampleController/add-data");
 // const findData = require("../controllers/SampleController/find-data");
 const personalTransactionController = require("../controllers/personal-transaction");
-const { addGroup } = require("../controllers/group");
 const {
   addGroupTransaction,
   userAmountData,
+  addGroup,
 } = require("../controllers/group-transaction");
 const userController = require("../controllers/userController");
 
