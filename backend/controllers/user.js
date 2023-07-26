@@ -1,4 +1,4 @@
-const User = require("../models/user"); // Assuming your User model file is named "user.js"
+const User = require("../models/user-model"); // Assuming your User model file is named "user.js"
 
 const getUserById = async (req, res) => {
   const userId = req.params.userId; // Assuming you pass the userId as a request parameter

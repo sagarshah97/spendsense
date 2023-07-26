@@ -94,7 +94,7 @@ function UserProfile() {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    const userId = "64bf4c863528564d5a7aa3b3";
+    const userId = "64c0c0af63cc30d64079845d";
     axios
       .get(`http://localhost:3000/user/${userId}`)
       .then((response) => {
@@ -119,18 +119,22 @@ function UserProfile() {
               }}
             >
               <Avatar sx={{ height: 200, width: 200 }}>
-                {stringAvatar(userData.username)}
+                console.log(userData)
+                {stringAvatar(userData.firstname)}
                 style={{ color: "white" }}
               </Avatar>
             </CardMedia>
 
             <CardContent>
               <Typography variant="h5" style={{ textAlign: "center" }}>
-                Welcome {userData.username}
+                Welcome {userData.firstname}
               </Typography>
               <List>
                 <ListItem>
-                  <ListItemText primary={`Name: ${userData.name}`} />
+                  <ListItemText primary={`Name: ${userData.firstname}`} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={`Name: ${userData.lastname}`} />
                 </ListItem>
                 <ListItem>
                   <ListItemText primary={`Email: ${userData.email}`} />
@@ -187,7 +191,7 @@ function UserProfile() {
                             UN
                           </Avatar>
                         }
-                        title={user.name}
+                        title={user.firstname}
                         subheader={user.email}
                       />
                     </Card>
