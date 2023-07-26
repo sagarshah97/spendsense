@@ -29,7 +29,10 @@ const Footer = () => {
               align="center"
               style={{ overflowWrap: "anywhere" }}
             >
-              <span onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
+              <span
+                onClick={() => navigate("/homepage")}
+                style={{ cursor: "pointer" }}
+              >
                 Home
               </span>
               <span

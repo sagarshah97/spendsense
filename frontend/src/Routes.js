@@ -18,9 +18,8 @@ const Router = () => {
   return (
     <Routes location={location} key={location.pathname}>
       <Route path="/" element={<NavBar />}>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/" element={<Dummy />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/homepage" element={<LandingPage />} />
         <Route path="/register" element={<Registration />} />
         <Route path="/passwordreset" element={<Password />} />
         <Route path="/contact" element={<Contact />} />

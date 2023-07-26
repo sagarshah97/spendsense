@@ -31,7 +31,7 @@ export default function DrawerAppBar(props) {
 
   const handleNavigation = (value) => {
     if (value === "Home") {
-      navigate("/");
+      navigate("/homepage");
     } else if (value === "Contact") {
       navigate("/contact");
     } else if (value === "FAQ") {

@@ -147,7 +147,7 @@ export default function Register() {
         if (response.status === 200) {
           setRegistrationError("Registration successful");
           setTimeout(() => {
-            navigate("/login");
+            navigate("/");
           }, 5000);
         } else {
           setRegistrationError("Registration failed. Please try again.");
