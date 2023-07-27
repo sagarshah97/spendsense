@@ -3,7 +3,6 @@ import {
   Grid,
   FormControl,
   TextField,
-  InputLabel,
   Select,
   MenuItem,
   Button,
@@ -12,13 +11,30 @@ import Slider from "react-slick";
 import axios from "axios";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-const ExpensePage = ({ handleExpenseSubmit, selectedDate }) => {
+const UpdateExpensePage = ({ selectedDate }) => {
+  const location = useLocation();
+  const transactionId = location.state.transactionId;
   const [amount, setAmount] = useState(0);
-  const [category, setCategory] = useState("");
-  const [note, setNote] = useState("");
-  const [date, setDate] = useState("");
+  const [category, setCategory] = useState(null);
+  const [note, setNote] = useState(null);
+  const [date, setDate] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get("/personalTransaction/" + transactionId)
+      .then((response) => {
+        setAmount(response.data.transaction.amount);
+        setCategory(response.data.transaction.category);
+        setNote(response.data.transaction.note);
+        setDate(response.data.transaction.date.split("T")[0]);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const handleAmountChange = (event) => {
     setAmount(event.target.value);
@@ -46,9 +62,8 @@ const ExpensePage = ({ handleExpenseSubmit, selectedDate }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    handleExpenseSubmit({ amount, category, note, date });
     axios
-      .post("/personalTransaction/add", {
+      .put("/personalTransaction/update/" + transactionId, {
         date,
         amount,
         category,
@@ -57,7 +72,7 @@ const ExpensePage = ({ handleExpenseSubmit, selectedDate }) => {
         userId,
       })
       .then((response) => {
-        console.log("Expense transaction added:", response.data);
+        console.log("Expense transaction updated:", response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -108,10 +123,8 @@ const ExpensePage = ({ handleExpenseSubmit, selectedDate }) => {
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel htmlFor="category">Category</InputLabel>
                   <Select
                     id="category"
-                    label="Category"
                     value={category}
                     onChange={handleCategoryChange}
                   >
@@ -127,7 +140,7 @@ const ExpensePage = ({ handleExpenseSubmit, selectedDate }) => {
                 <FormControl fullWidth variant="outlined">
                   <TextField
                     type="text"
-                    label="Note"
+                    label={note === "" ? "Note" : ""}
                     id="note"
                     value={note}
                     onChange={handleNoteChange}
@@ -138,7 +151,7 @@ const ExpensePage = ({ handleExpenseSubmit, selectedDate }) => {
               </Grid>
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary">
-                  Submit
+                  Update Expense
                 </Button>
               </Grid>
             </Grid>
@@ -149,4 +162,4 @@ const ExpensePage = ({ handleExpenseSubmit, selectedDate }) => {
   );
 };
 
-export default ExpensePage;
+export default UpdateExpensePage;
