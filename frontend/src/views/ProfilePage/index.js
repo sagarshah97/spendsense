@@ -96,7 +96,7 @@ function UserProfile() {
   useEffect(() => {
     const userId = "64c0c0af63cc30d64079845d";
     axios
-      .get(`http://localhost:3000/user/${userId}`)
+      .get(`/user/${userId}`)
       .then((response) => {
         setUserData(response.data.user);
       })
