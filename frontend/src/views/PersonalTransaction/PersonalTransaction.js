@@ -40,11 +40,15 @@ const StyledExpenseRow = styled(TableRow)({
 const PersonalTransaction = () => {
 	const [data, setData] = useState([]);
 	const [total, setTotal] = useState('');
+	const userId = sessionStorage.getItem('userId');
 
 	useEffect(() => {
-		// Fetch data from backend API
+		fetchData();
+	}, []);
+
+	const fetchData = () => {
 		axios
-			.get('http://localhost:8080/api/personalTransactions')
+			.post('/personalTransactions', { userId })
 			.then((response) => {
 				setTotal(
 					response.data.transactions.reduce(
@@ -64,48 +68,24 @@ const PersonalTransaction = () => {
 			.catch((error) => {
 				console.error(error);
 			});
-	}, []);
+	};
 
 	const handleDelete = (transactionId) => {
 		console.log(transactionId);
 		// Delete the transaction from the backend API
 		axios
-			.delete(
-				`http://localhost:8080/api/personalTransaction/delete/${transactionId}`
-			)
+			.delete(`/personalTransaction/delete/${transactionId}`)
 			.then((response) => {
 				console.log('Transaction deleted:', response.data);
 				// Refresh the data by refetching it from the backend API
-				refreshData();
+				fetchData();
 			})
 			.catch((error) => {
 				console.error(error);
 			});
 	};
 
-	const refreshData = () => {
-		axios
-			.get('http://localhost:8080/api/personalTransactions')
-			.then((response) => {
-				setTotal(
-					response.data.transactions.reduce(
-						(total, transaction) =>
-							transaction.typeOfTransaction === 'Income'
-								? total + transaction.amount
-								: total - transaction.amount,
-						0
-					)
-				);
-				setData(
-					response.data.transactions.sort((a, b) =>
-						a.date > b.date ? 1 : -1
-					)
-				);
-			})
-			.catch((error) => {
-				console.error(error);
-			});
-	};
+	console.log('userId', userId);
 
 	// Get the navigate function from React Router
 	const navigate = useNavigate();

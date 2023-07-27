@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   Modal,
@@ -11,8 +11,10 @@ import {
   Grid,
   Chip,
 } from "@mui/material";
+import axios from "axios";
 
 const MemberSearchModal = ({ open, handleClose, handleGroupSubmit }) => {
+  const loggedInUserId = "64c0c0af63cc30d64079845d"; //todo: get from session storage
   const [groupName, setGroupName] = useState("");
   const [memberEmail, setMemberEmail] = useState("");
   const [members, setMembers] = useState([]);
@@ -20,32 +22,26 @@ const MemberSearchModal = ({ open, handleClose, handleGroupSubmit }) => {
 
   const [selectedMember, setSelectedMember] = useState("");
 
-  const [existingMembers, setExistingMembers] = useState([
-    {
-      name: "Pratik Parmar",
-      email: "pratik@example.com",
-    },
-    {
-      name: "Aayush Pandya",
-      email: "aayush@example.com",
-    },
-    {
-      name: "Nikhil Panikassery",
-      email: "nikhil@example.com",
-    },
-    {
-      name: "Siddhesh Salve",
-      email: "siddhesh@example.com",
-    },
-    {
-      name: "Raj Patel",
-      email: "raj@example.com",
-    },
-    {
-      name: "Harsh Vaghani",
-      email: "harsh@example.com",
-    },
-  ]);
+  const [existingMembers, setExistingMembers] = useState([]);
+
+  useEffect(() => {
+    getFriends();
+  });
+
+  const getFriends = () => {
+    axios
+      .post("/users/getFriends", {
+        userId: loggedInUserId,
+      })
+      .then((res) => {
+        if (res.data.length > 0) {
+          setExistingMembers(res.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const handleGroupNameChange = (event) => {
     setGroupName(event.target.value);
@@ -59,14 +55,19 @@ const MemberSearchModal = ({ open, handleClose, handleGroupSubmit }) => {
   const handleAddMember = () => {
     if (selectedMember) {
       const existingMember = members.find(
-        (member) => member.email === selectedMember
+        (member) => member.id === selectedMember
       );
       if (existingMember) {
         setError("Member already added");
         return;
       }
 
-      setMembers([...members, { email: selectedMember }]);
+      const memberDetails = existingMembers.find(
+        (obj) => obj.id === selectedMember
+      );
+      console.log(memberDetails);
+      setMembers([...members, memberDetails]);
+
       setMemberEmail("");
       setError("");
     }
@@ -77,31 +78,13 @@ const MemberSearchModal = ({ open, handleClose, handleGroupSubmit }) => {
   };
 
   const handleGroupSubmitClick = () => {
-    // Verify if members exist in the system
-    const nonExistingMembers = members.filter((member) => {
-      // Simulated check if member exists in the system
-      return !member.email.includes("@example.com"); //todo: make the api call to verify if these users exist in the database and return their names
-    });
-
-    if (nonExistingMembers.length > 0) {
-      setError(
-        `Members ${nonExistingMembers
-          .map((member) => member.email)
-          .join(", ")} do not exist`
-      );
-      return;
-    }
-
     if (groupName && members.length > 0) {
       //todo: send their full names
       let addedMembers = [];
       members.forEach((obj) => {
-        addedMembers.push(
-          obj.email.split("@")[0].charAt(0).toUpperCase() +
-            obj.email.split("@")[0].slice(1)
-        );
+        addedMembers.push(obj.id);
       });
-      handleGroupSubmit({ name: groupName, addedMembers });
+      handleGroupSubmit({ name: groupName, members: addedMembers });
       setGroupName("");
       setMembers([]);
       setError("");
@@ -115,7 +98,11 @@ const MemberSearchModal = ({ open, handleClose, handleGroupSubmit }) => {
         container
         justifyContent="center"
         alignItems="center"
-        sx={{ width: "100%", height: "100%", outline: "none" }}
+        sx={{
+          width: "100%",
+          height: "100%",
+          outline: "none",
+        }}
       >
         <Grid
           item
@@ -125,7 +112,7 @@ const MemberSearchModal = ({ open, handleClose, handleGroupSubmit }) => {
           lg={4}
           sx={{ bgcolor: "background.paper", p: 3, borderRadius: "8px" }}
         >
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" style={{ marginBottom: "5%" }}>
             New Group
           </Typography>
           <TextField
@@ -134,32 +121,42 @@ const MemberSearchModal = ({ open, handleClose, handleGroupSubmit }) => {
             fullWidth
             value={groupName}
             onChange={handleGroupNameChange}
+            style={{ marginBottom: "3%" }}
           />
-          <FormControl fullWidth style={{ marginTop: "5%" }}>
-            <InputLabel id="group-label">Select a member</InputLabel>
-            <Select
-              labelId="group-label"
-              id="group-select"
-              label="Select a member"
-              value={selectedMember}
-              onChange={handleMemberChange}
-            >
-              {existingMembers.map((member) => (
-                <MenuItem key={member.email} value={member.email}>
-                  {member.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddMember}
-            sx={{ mt: 2 }}
-            fullWidth
-          >
-            Add Member
-          </Button>
+          <Grid container spacing={2}>
+            <Grid item xs={8}>
+              <FormControl fullWidth style={{ marginTop: "5%" }}>
+                <InputLabel id="group-label">Select a member</InputLabel>
+                <Select
+                  labelId="group-label"
+                  id="group-select"
+                  label="Select a member"
+                  value={selectedMember}
+                  onChange={handleMemberChange}
+                >
+                  {existingMembers.map((member) => (
+                    <MenuItem key={member.id} value={member.id}>
+                      {member.firstname + " " + member.lastname}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddMember}
+                sx={{ mt: 2 }}
+                fullWidth
+                style={{
+                  height: "56px",
+                }}
+              >
+                Add Member
+              </Button>
+            </Grid>
+          </Grid>
           {error && (
             <Typography color="error" sx={{ mt: 2 }}>
               {error}
@@ -167,26 +164,56 @@ const MemberSearchModal = ({ open, handleClose, handleGroupSubmit }) => {
           )}
           {members.length > 0 && (
             <Grid container spacing={1} sx={{ mt: 2 }}>
-              {members.map((member, index) => (
-                <Grid item key={index}>
-                  <Chip
-                    label={member.email}
-                    onDelete={() => handleRemoveMember(member.email)}
-                  />
-                </Grid>
-              ))}
+              <Grid item xs={12}>
+                <Typography style={{ paddingLeft: "1%" }}>
+                  Added members:
+                </Typography>
+              </Grid>
+
+              {members.length > 0 &&
+                members.map((member, index) => (
+                  <Grid item key={index}>
+                    <Chip
+                      label={member.firstname + " " + member.lastname}
+                      onDelete={() => handleRemoveMember(member.email)}
+                    />
+                  </Grid>
+                ))}
             </Grid>
           )}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleGroupSubmitClick}
-            disabled={!groupName || members.length === 0}
-            sx={{ mt: 3 }}
-            fullWidth
+          <Grid
+            container
+            spacing={2}
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              marginTop: "3%",
+            }}
           >
-            Submit
-          </Button>
+            <Grid item>
+              <Button
+                variant="outlined"
+                color="primary"
+                type="onClose"
+                sx={{ mt: 3 }}
+                onClick={handleClose}
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleGroupSubmitClick}
+                disabled={!groupName || members.length === 0}
+                sx={{ mt: 3 }}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Modal>

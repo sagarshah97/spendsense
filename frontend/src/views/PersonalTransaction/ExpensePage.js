@@ -41,16 +41,19 @@ const ExpensePage = ({ handleExpenseSubmit, selectedDate }) => {
 		}
 	}, [selectedDate]);
 
+	const userId = sessionStorage.getItem('userId');
+
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		handleExpenseSubmit({ amount, category, note, date });
 		axios
-			.post('http://localhost:8080/api/personalTransaction/add', {
+			.post('/personalTransaction/add', {
 				date,
 				amount,
 				category,
 				note,
-				typeOfTransaction: 'Expense', // Set the type of transaction
+				typeOfTransaction: 'Expense',
+				userId,
 			})
 			.then((response) => {
 				console.log('Expense transaction added:', response.data);

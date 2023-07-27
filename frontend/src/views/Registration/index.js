@@ -93,10 +93,8 @@ export default function Register() {
     setConfirmPassword(value);
     setConfirmPasswordError(value === password ? "" : "Passwords don't match");
 
-    // Check password validity here
     validatePassword(password, value);
 
-    // Check if the form is valid
     const isFormValid =
       firstName &&
       lastName &&
@@ -109,7 +107,6 @@ export default function Register() {
       value === password &&
       validatePassword(password, value);
 
-    // Enable or disable the Sign Up button based on form validity
     if (isFormValid) {
       setFormError("");
     } else {
@@ -139,15 +136,12 @@ export default function Register() {
           password,
         };
 
-        const response = await axios.post(
-          "http://localhost:8080/api/users/register",
-          param
-        );
+        const response = await axios.post("/users/register", param);
 
         if (response.status === 200) {
           setRegistrationError("Registration successful");
           setTimeout(() => {
-            navigate("/login");
+            navigate("/");
           }, 5000);
         } else {
           setRegistrationError("Registration failed. Please try again.");
@@ -401,7 +395,6 @@ export default function Register() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={formError !== "" || registrationError !== ""}
             >
               Sign Up
             </Button>
@@ -409,7 +402,7 @@ export default function Register() {
               <span style={{ color: "black" }}>Already have an account? </span>
               <span
                 variant="body2"
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/")}
                 style={{
                   textDecoration: "none",
                   color: "blue",
