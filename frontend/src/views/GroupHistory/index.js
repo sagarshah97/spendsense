@@ -16,21 +16,21 @@ const GroupHistory = () => {
   const [groupHistory, setGroupHistory] = useState([]);
   const [groupData, setGroupData] = useState(null);
 
+  const userId = sessionStorage.getItem("userId");
+
   const fetchGroupHistory = async (selectedGroup) => {
     try {
-      // let userId = "64c0c0af63cc30d64079845d";
       const response = await axios.get(
-        `http://localhost:8080/api/getGroupTransactions/${selectedGroup}`
+        `http://localhost:8080/getGroupTransactions/${selectedGroup}`
       );
       setGroupHistory(response.data);
-      // alert(JSON.stringify(response.data));
     } catch (error) {
       console.error("Error fetching groups:", error);
     }
   };
 
   useEffect(() => {
-    fetchGroupHistory(selectedGroup);
+    selectedGroup && fetchGroupHistory(selectedGroup);
   }, [selectedGroup]);
 
   // useEffect(() => {
@@ -49,9 +49,8 @@ const GroupHistory = () => {
 
   const fetchGroups = async () => {
     try {
-      let userId = "64c0c0af63cc30d64079845d";
       const response = await axios.get(
-        `http://localhost:8080/api/getGroups/${userId}`
+        `http://localhost:8080/getGroups/${userId}`
       );
       setGroupData(response.data);
     } catch (error) {

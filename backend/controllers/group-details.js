@@ -54,7 +54,7 @@ const getGroupDetails = async (req, res) => {
 const getGroups = async (req, res) => {
   try {
     let userId = req.params.id;
-    const userGroups = await group.aggregate([
+    const userGroups = await Group.aggregate([
       {
         $match: {
           members: new mongoose.Types.ObjectId(userId),
