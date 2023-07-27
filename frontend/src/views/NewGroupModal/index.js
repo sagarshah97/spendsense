@@ -14,7 +14,7 @@ import {
 import axios from "axios";
 
 const MemberSearchModal = ({ open, handleClose, handleGroupSubmit }) => {
-  const loggedInUserId = "64c0c0af63cc30d64079845d"; //todo: get from session storage
+  const loggedInUserId = sessionStorage.getItem("userId"); //todo: get from session storage
   const [groupName, setGroupName] = useState("");
   const [memberEmail, setMemberEmail] = useState("");
   const [members, setMembers] = useState([]);
@@ -84,6 +84,7 @@ const MemberSearchModal = ({ open, handleClose, handleGroupSubmit }) => {
       members.forEach((obj) => {
         addedMembers.push(obj.id);
       });
+      addedMembers.push(loggedInUserId);
       handleGroupSubmit({ name: groupName, members: addedMembers });
       setGroupName("");
       setMembers([]);
