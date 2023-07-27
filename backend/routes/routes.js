@@ -4,6 +4,7 @@ const {
   addGroupTransaction,
   userAmountData,
   addGroup,
+  getGroupTransactions,
 } = require("../controllers/group-transaction");
 const userController = require("../controllers/userController");
 const userFriendsController = require("../controllers/user-friends");
@@ -37,5 +38,6 @@ router.route("/userAmountData").get(userAmountData);
 router.route("/users/getFriends").post(userFriendsController.getFriends);
 
 router.route("/groups/:userId").get(groupDetailsController.getGroupDetails);
-
+router.route("/getGroups/:id").get(groupDetailsController.getGroups);
+router.route("/getGroupTransactions/:id").get(getGroupTransactions);
 module.exports = router;
