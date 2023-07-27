@@ -3,7 +3,6 @@ import {
   Grid,
   FormControl,
   TextField,
-  InputLabel,
   Select,
   MenuItem,
   Button,
@@ -12,13 +11,30 @@ import Slider from "react-slick";
 import axios from "axios";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-const IncomePage = ({ handleIncomeSubmit, selectedDate }) => {
+const UpdateIncomePage = ({ selectedDate }) => {
+  const location = useLocation();
+  const transactionId = location.state.transactionId;
   const [amount, setAmount] = useState(0);
-  const [category, setCategory] = useState("");
-  const [note, setNote] = useState("");
-  const [date, setDate] = useState("");
+  const [category, setCategory] = useState(null);
+  const [note, setNote] = useState(null);
+  const [date, setDate] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get("/personalTransaction/" + transactionId)
+      .then((response) => {
+        setAmount(response.data.transaction.amount);
+        setCategory(response.data.transaction.category);
+        setNote(response.data.transaction.note);
+        setDate(response.data.transaction.date.split("T")[0]);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const handleAmountChange = (event) => {
     setAmount(event.target.value);
@@ -43,11 +59,11 @@ const IncomePage = ({ handleIncomeSubmit, selectedDate }) => {
   }, [selectedDate]);
 
   const userId = sessionStorage.getItem("userId");
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    handleIncomeSubmit({ amount, category, note, date });
     axios
-      .post("/personalTransaction/add", {
+      .put("/personalTransaction/update/" + transactionId, {
         date,
         amount,
         category,
@@ -56,7 +72,7 @@ const IncomePage = ({ handleIncomeSubmit, selectedDate }) => {
         userId,
       })
       .then((response) => {
-        console.log("Income transaction added:", response.data);
+        console.log("Expense transaction updated:", response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -77,8 +93,8 @@ const IncomePage = ({ handleIncomeSubmit, selectedDate }) => {
   };
 
   return (
-    <div className="page-container IncomePage">
-      <h1 style={{ overflowWrap: "anywhere" }}>Income</h1>
+    <div className="page-container ExpensePage">
+      <h1 style={{ overflowWrap: "anywhere" }}>Expense</h1>
 
       <Slider {...settings}>
         <div>
@@ -98,25 +114,21 @@ const IncomePage = ({ handleIncomeSubmit, selectedDate }) => {
                 <FormControl fullWidth variant="outlined">
                   <TextField
                     type="number"
-                    id="amount"
                     label="Amount"
+                    id="amount"
                     value={amount}
                     onChange={handleAmountChange}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
                   />
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel htmlFor="category">Category</InputLabel>
                   <Select
                     id="category"
+                    label="Category"
                     value={category}
                     onChange={handleCategoryChange}
                   >
-                    <MenuItem value="">Select a category</MenuItem>
                     <MenuItem value="Salary">Salary</MenuItem>
                     <MenuItem value="Freelance">Freelance</MenuItem>
                     <MenuItem value="Investments">Investments</MenuItem>
@@ -128,7 +140,6 @@ const IncomePage = ({ handleIncomeSubmit, selectedDate }) => {
                 <FormControl fullWidth variant="outlined">
                   <TextField
                     type="text"
-                    label="Note"
                     id="note"
                     value={note}
                     onChange={handleNoteChange}
@@ -139,7 +150,7 @@ const IncomePage = ({ handleIncomeSubmit, selectedDate }) => {
               </Grid>
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary">
-                  Submit
+                  Update Income
                 </Button>
               </Grid>
             </Grid>
@@ -150,4 +161,4 @@ const IncomePage = ({ handleIncomeSubmit, selectedDate }) => {
   );
 };
 
-export default IncomePage;
+export default UpdateIncomePage;
