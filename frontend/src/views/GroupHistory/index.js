@@ -51,7 +51,7 @@ const GroupHistory = () => {
   }, []);
 
   return (
-    <div style={{ maxWidth: "75%", margin: "0 auto" }}>
+    <div style={{ maxWidth: "75%", margin: "0 auto", paddingBottom: "30px" }}>
       <Typography
         variant="h4"
         align="center"
