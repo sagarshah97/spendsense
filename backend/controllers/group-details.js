@@ -51,5 +51,53 @@ const getGroupDetails = async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 };
-
-module.exports = { getGroupDetails };
+const getGroups = async (req, res) => {
+  try {
+    let userId = req.params.id;
+    const userGroups = await group.aggregate([
+      {
+        $match: {
+          members: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "members",
+          foreignField: "_id",
+          as: "membersInfo",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          members: {
+            $map: {
+              input: "$membersInfo",
+              as: "member",
+              in: {
+                $concat: ["$$member.firstname", " ", "$$member.lastname"],
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          id: "$_id",
+          name: 1,
+          members: 1,
+        },
+      },
+    ]);
+    res.status(200).json(userGroups);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      failure: true,
+    });
+  }
+};
+module.exports = { getGroupDetails, getGroups };

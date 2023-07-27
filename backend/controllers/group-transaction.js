@@ -108,4 +108,75 @@ const addGroup = async (req, res) => {
     });
   }
 };
-module.exports = { addGroupTransaction, userAmountData, addGroup };
+
+const getGroupTransactions = async (req, res) => {
+  try {
+    let groupId = req.params.id;
+    const groupTransactions = await groupTransaction.aggregate([
+      {
+        $match: {
+          groupId: groupId,
+        },
+      },
+      {
+        $addFields: {
+          paidByUserIdObjectId: { $toObjectId: "$paidByUserId" },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "paidByUserIdObjectId",
+          foreignField: "_id",
+          as: "paidByUserData",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          id: "$transactionId",
+          groupId: 1,
+          timestamp: 1,
+          description: 1,
+          paidBy: { $arrayElemAt: ["$paidByUserData.firstname", 0] },
+          memberDivision: "$amount",
+        },
+      },
+      {
+        $group: {
+          _id: "$id",
+          groupId: { $first: "$groupId" },
+          timestamp: { $first: "$timestamp" },
+          description: { $first: "$description" },
+          paidBy: { $first: "$paidBy" },
+          memberDivision: { $push: "$memberDivision" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          id: "$_id",
+          groupId: 1,
+          timestamp: 1,
+          description: 1,
+          paidBy: 1,
+          memberDivision: 1,
+        },
+      },
+    ]);
+
+    res.status(200).json(groupTransactions);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      failure: true,
+    });
+  }
+};
+
+module.exports = {
+  addGroupTransaction,
+  userAmountData,
+  addGroup,
+  getGroupTransactions,
+};
