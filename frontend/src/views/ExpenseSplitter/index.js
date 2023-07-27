@@ -14,9 +14,13 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
-const ExpenseSplitter = ({ groups, handleOpenModal }) => {
+const ExpenseSplitter = ({
+  groups,
+  handleOpenModal,
+  handleExpenseSubmitted,
+}) => {
   console.log(groups);
-  const currentUser = sessionStorage.getItem("userId"); //todo: get from session storage
+  const currentUser = sessionStorage.getItem("userId");
 
   const [selectedGroup, setSelectedGroup] = useState("");
   const [splitOption, setSplitOption] = useState("equal");
@@ -348,11 +352,11 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
       .post("/addGroupTransaction", groupExpense)
       .then((result) => {
         console.log("success");
+        handleExpenseSubmitted();
       })
       .catch((error) => {
         console.log("failure");
       });
-    console.log(groupExpense);
   };
 
   useEffect(() => {
