@@ -17,19 +17,24 @@ const userdetails = async (req, res) => {
   }
 };
 
-// const getusers = async (req, res) => {
-//   try {
-//     const users = await User.find({}, { _id: 1 });
-//     const userIds = users.map((user) => user._id);
+const getusers = async (req, res) => {
+  try {
+    const users = await User.aggregate([
+      {
+        $project: {
+          _id: 1,
+          email: 1,
+          fullname: { $concat: ["$firstname", " ", "$lastname"] },
+        },
+      },
+    ]);
 
-//     const userEmails = await User.find({ _id: { $in: userIds } }, { email: 1 });
-
-//     return res.json(userEmails);
-//   } catch (error) {
-//     console.error("Error fetching users:", error);
-//     return res.status(500).json({ error: "Server error" });
-//   }
-// };
+    return res.json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
 
 const addfriend = async (req, res) => {
   const { userId, friendId } = req.body;
@@ -71,4 +76,4 @@ const addfriend = async (req, res) => {
   }
 };
 
-module.exports = { userdetails, addfriend };
+module.exports = { userdetails, getusers, addfriend };

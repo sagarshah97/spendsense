@@ -31,7 +31,7 @@ router
   .route("/personalTransaction/delete/:transactionId")
   .delete(personalTransactionController.deletePersonalTransaction);
 router.route("/userdetails").post(user.userdetails);
-//router.route("/getusers").get(user.getusers);
+router.route("/getusers").get(user.getusers);
 router.route("/addfriend").post(user.addfriend);
 
 router.route("/users/getFriends").post(userFriendsController.getFriends);
