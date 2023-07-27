@@ -1,5 +1,11 @@
 const express = require("express");
 const personalTransactionController = require("../controllers/personal-transaction");
+const {
+  addGroupTransaction,
+  userAmountData,
+  addGroup,
+  getGroupTransactions,
+} = require("../controllers/group-transaction");
 const userController = require("../controllers/userController");
 const userFriendsController = require("../controllers/user-friends");
 const groupDetailsController = require("../controllers/group-details");
@@ -26,8 +32,12 @@ router
   .route("/personalTransaction/delete/:transactionId")
   .delete(personalTransactionController.deletePersonalTransaction);
 
+router.route("/addGroup").post(addGroup);
+router.route("/addGroupTransaction").post(addGroupTransaction);
+router.route("/userAmountData").get(userAmountData);
 router.route("/users/getFriends").post(userFriendsController.getFriends);
 
 router.route("/groups/:userId").get(groupDetailsController.getGroupDetails);
-
+router.route("/getGroups/:id").get(groupDetailsController.getGroups);
+router.route("/getGroupTransactions/:id").get(getGroupTransactions);
 module.exports = router;

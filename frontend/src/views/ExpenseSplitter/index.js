@@ -12,10 +12,11 @@ import {
   Chip,
   Avatar,
 } from "@mui/material";
+import axios from "axios";
 
 const ExpenseSplitter = ({ groups, handleOpenModal }) => {
   console.log(groups);
-  const currentUser = "64c0c0af63cc30d64079845d"; //todo: get from session storage
+  const currentUser = sessionStorage.getItem("userId"); //todo: get from session storage
 
   const [selectedGroup, setSelectedGroup] = useState("");
   const [splitOption, setSplitOption] = useState("equal");
@@ -331,6 +332,7 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
   };
 
   const handleSubmit = () => {
+    let paidByUserId = currentUser;
     const groupExpense = {
       group: selectedGroup,
       split: splitOption,
@@ -340,8 +342,16 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
       amount,
       category,
       note,
+      paidByUserId,
     };
-
+    axios
+      .post("/addGroupTransaction", groupExpense)
+      .then((result) => {
+        console.log("success");
+      })
+      .catch((error) => {
+        console.log("failure");
+      });
     console.log(groupExpense);
   };
 
