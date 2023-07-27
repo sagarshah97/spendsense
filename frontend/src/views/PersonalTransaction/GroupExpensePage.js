@@ -1,34 +1,33 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import Slider from "react-slick";
 import ExpenseSplitter from "../ExpenseSplitter/index";
 import MemberSearchModal from "../NewGroupModal/index";
+import axios from "axios";
 
 const GroupExpensePage = ({ handleExpenseSubmit }) => {
-  const currentUser = "John Wick";
+  const currentUser = "64c0c0af63cc30d64079845d"; //todo: get from session storage
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [groups, setGroups] = useState([
-    {
-      id: 1,
-      name: "Group A",
-      members: ["John Wick", "Jake Peralta", "Alice Smith", "Kate Winslet"],
-    },
-    {
-      id: 2,
-      name: "Group B",
-      members: [
-        "John Wick",
-        "Bob Murray",
-        "Charlie Chaplin",
-        "Evangeline Lily",
-      ],
-    },
-    {
-      id: 3,
-      name: "Group C",
-      members: ["Mike Ross", "John Wick", "Sarah Connor", "Tom Felton"],
-    },
-  ]);
+  const [groups, setGroups] = useState([]);
+
+  useEffect(() => {
+    if (!groups.length) {
+      getGroupDetails();
+    }
+  }, []);
+
+  const getGroupDetails = () => {
+    axios
+      .get(`/groups/${currentUser}`)
+      .then((res) => {
+        if (res?.data?.length) {
+          setGroups(res.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -40,13 +39,8 @@ const GroupExpensePage = ({ handleExpenseSubmit }) => {
 
   const handleGroupSubmit = (groupDetails) => {
     console.log(groupDetails);
-    // const newGroup = {
-    //   id: groups[groups.length - 1].id + 1,
-    //   name: groupDetails.name,
-    //   members: groupDetails.addedMembers.concat(currentUser),
-    // };
-
-    // setGroups((prevGroups) => [...prevGroups, newGroup]);
+    //todo: save group to db
+    getGroupDetails();
   };
 
   const settings = {
