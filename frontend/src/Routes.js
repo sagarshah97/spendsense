@@ -12,6 +12,8 @@ import GroupExpenseDashboard from "./views/GroupExpensesDashboard";
 import GroupHistory from "./views/GroupHistory";
 import LandingPage from "./views/LandingPage";
 import Trends from "./views/DisplayTrend";
+import Profile from "./views/ProfilePage";
+import CalendarView from "./views/CalenderView";
 
 const Router = () => {
   const location = useLocation();
@@ -30,8 +32,10 @@ const Router = () => {
           path="/GroupExpenseDashboard"
           element={<GroupExpenseDashboard />}
         />
+        <Route path="/calender" element={<CalendarView />} />
         <Route path="/GroupHistory" element={<GroupHistory />} />
         <Route path="/trends" element={<Trends />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
     </Routes>
   );
