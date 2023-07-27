@@ -186,10 +186,16 @@ const getGroupTransactions = async (req, res) => {
 const settleUp = async (req, res) => {
   try {
     let transactionOId = req.body.id;
-    const updateResult = await groupTransaction.findOneAndUpdate({
-      _id: new mongoose.Types.ObjectId(transactionOId),
-      settledUp: true,
-    });
+    const updateResult = await groupTransaction.updateOne(
+      {
+        _id: new mongoose.Types.ObjectId(transactionOId),
+      },
+      {
+        $set: {
+          settledUp: true,
+        },
+      }
+    );
     res.status(200).json({
       success: true,
     });
