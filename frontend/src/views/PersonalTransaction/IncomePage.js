@@ -41,16 +41,18 @@ const IncomePage = ({ handleIncomeSubmit, selectedDate }) => {
 		}
 	}, [selectedDate]);
 
+	const userId = sessionStorage.getItem('userId');
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		handleIncomeSubmit({ amount, category, note, date });
 		axios
-			.post('http://localhost:8080/api/personalTransaction/add', {
+			.post('/personalTransaction/add', {
 				date,
 				amount,
 				category,
 				note,
 				typeOfTransaction: 'Income', // Set the type of transaction
+				userId,
 			})
 			.then((response) => {
 				console.log('Income transaction added:', response.data);

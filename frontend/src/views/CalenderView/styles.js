@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Dialog } from '@mui/material';
 
 export const CalendarContainer = styled.div`
-	height: 500px;
+	height: 90%;
 	background-color: #f8f9fa;
 	border-radius: 10px;
 	padding: 20px;
