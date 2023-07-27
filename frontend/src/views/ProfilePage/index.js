@@ -14,7 +14,28 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
+async function userdetails(email) {
+  try {
+    const response = await axios.get(`http://localhost:8080/userdetails`, {
+      email,
+    });
+    return response.data.user;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw error;
+  }
+}
+
 function UserProfile() {
+  const [usersList, setUsersList] = useState([]);
+  const [selectedFriend, setSelectedFriend] = useState("");
+  const [userData, setUserData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    age: 0,
+    friends: [],
+  });
   const getNameInitials = (name) => {
     const names = name.split(" ");
 
@@ -91,19 +112,53 @@ function UserProfile() {
   //   ],
   // };
 
-  const [userData, setUserData] = useState(null);
-
   useEffect(() => {
-    const userId = "64c0c0af63cc30d64079845d";
-    axios
-      .get(`http://localhost:3000/user/${userId}`)
-      .then((response) => {
-        setUserData(response.data.user);
+    const email = "johndoe@example.com";
+
+    userdetails(email)
+      .then((user) => {
+        console.log(user);
+        setUserData({
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          age: user.age,
+          friends: user.friends,
+        });
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
   }, []);
+
+  useEffect(() => {
+    // Assuming you have a backend API endpoint that fetches user data
+    axios
+      .get("/api/users")
+      .then((response) => {
+        setUsersList(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  }, []);
+
+  const handleAddFriend = () => {
+    axios
+      .post("/api/addfriend", { friendEmail: selectedFriend, userData })
+      .then((response) => {
+        // Handle success, update userData with the new friend
+        setUserData((prevData) => ({
+          ...prevData,
+          friends: [...prevData.friends, response.data],
+        }));
+        // Clear the selectedFriend state
+        setSelectedFriend("");
+      })
+      .catch((error) => {
+        console.error("Error adding friend:", error);
+      });
+  };
 
   return (
     <Container maxWidth="lg" style={{ paddingTop: "50px" }}>
@@ -118,11 +173,12 @@ function UserProfile() {
                 paddingTop: "2%",
               }}
             >
-              <Avatar sx={{ height: 200, width: 200 }}>
-                console.log(userData)
-                {stringAvatar(userData.firstname)}
+              {JSON.stringify(userData)}
+              <Avatar
+                sx={{ height: 200, width: 200 }}
+                {...stringAvatar(userData.firstname + userData.lastname)}
                 style={{ color: "white" }}
-              </Avatar>
+              ></Avatar>
             </CardMedia>
 
             <CardContent>
@@ -199,6 +255,24 @@ function UserProfile() {
                 </>
               ))}
             </Grid>
+          </div>
+        </Grid>
+
+        <Grid>
+          <div>
+            <select
+              value={selectedFriend}
+              onChange={(e) => setSelectedFriend(e.target.value)}
+            >
+              <option value="">Select a friend's email</option>
+              {usersList.map((user, index) => (
+                <option key={index} value={user.email}>
+                  {user.email}
+                </option>
+              ))}
+            </select>
+            {/* Add Friend button */}
+            <button onClick={handleAddFriend}>Add Friend</button>
           </div>
         </Grid>
       </Grid>
