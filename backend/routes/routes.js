@@ -1,29 +1,29 @@
-const express = require("express");
+const express = require('express');
 // const addData = require("../controllers/SampleController/add-data");
 // const findData = require("../controllers/SampleController/find-data");
-const personalTransactionController = require("../controllers/personal-transaction");
-const userController = require("../controllers/userController");
+const personalTransactionController = require('../controllers/personal-transaction');
+const userController = require('../controllers/userController');
 
 const router = express.Router();
 
-router.route("/users/register").post(userController.register);
-router.route("/users/login").post(userController.login);
+router.route('/users/register').post(userController.register);
+router.route('/users/login').post(userController.login);
 // router.route("/addData").post(addData);
 // router.route("/findData").get(findData);
 router
-  .route("/personalTransaction/add")
-  .post(personalTransactionController.addPersonalTransaction);
+	.route('/personalTransaction/add')
+	.post(personalTransactionController.addPersonalTransaction);
 router
-  .route("/personalTransaction/:transactionId")
-  .get(personalTransactionController.getPersonalTransaction);
+	.route('/personalTransaction/:transactionId')
+	.get(personalTransactionController.getPersonalTransaction);
 router
-  .route("/personalTransactions")
-  .get(personalTransactionController.getPersonalTransactions);
+	.route('/personalTransactions')
+	.post(personalTransactionController.getPersonalTransactions);
 router
-  .route("/personalTransaction/update/:transactionId")
-  .put(personalTransactionController.updatePersonalTransaction);
+	.route('/personalTransaction/update/:transactionId')
+	.put(personalTransactionController.updatePersonalTransaction);
 router
-  .route("/personalTransaction/delete/:transactionId")
-  .delete(personalTransactionController.deletePersonalTransaction);
+	.route('/personalTransaction/delete/:transactionId')
+	.delete(personalTransactionController.deletePersonalTransaction);
 
 module.exports = router;
