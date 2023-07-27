@@ -36,14 +36,22 @@ const addGroupTransaction = async (req, res) => {
 };
 
 const userAmountData = async (req, res) => {
-  const currentUserId = "64c0c0af63cc30d64079845d";
+  const currentUserId = req.params.userId;
   try {
     let result = { whatIOwe: [], whatImOwed: [] };
     const owedData = await groupTransaction.find({
-      paidByUserId: currentUserId,
+      $and: [
+        { paidByUserId: currentUserId },
+        { userId: { $ne: currentUserId } },
+        { settledUp: false },
+      ],
     });
     const oweData = await groupTransaction.find({
-      userId: currentUserId,
+      $and: [
+        { userId: currentUserId },
+        { paidByUserId: { $ne: currentUserId } },
+        { settledUp: false },
+      ],
     });
 
     for (const transaction of owedData) {
@@ -56,7 +64,12 @@ const userAmountData = async (req, res) => {
       });
       let groupName = groupDetails[0].name;
       let name = user[0].firstname + " " + user[0].lastname;
-      result.whatImOwed.push({ name, amount, group: groupName });
+      result.whatImOwed.push({
+        id: transaction._id,
+        name,
+        amount,
+        group: groupName,
+      });
     }
 
     for (const transaction of oweData) {
@@ -67,9 +80,14 @@ const userAmountData = async (req, res) => {
       let user = await User.find({
         _id: new mongoose.Types.ObjectId(transaction.paidByUserId),
       });
-      let groupName = groupDetails.name;
+      let groupName = groupDetails[0].name;
       let name = user[0].firstname + " " + user[0].lastname;
-      result.whatIOwe.push({ name, amount, group: groupName });
+      result.whatIOwe.push({
+        id: transaction._id,
+        name,
+        amount,
+        group: groupName,
+      });
     }
     res.status(200).json({
       result: result,
@@ -165,9 +183,27 @@ const getGroupTransactions = async (req, res) => {
   }
 };
 
+const settleUp = async (req, res) => {
+  try {
+    let transactionOId = req.body.id;
+    const updateResult = await groupTransaction.findOneAndUpdate({
+      _id: new mongoose.Types.ObjectId(transactionOId),
+      settledUp: true,
+    });
+    res.status(200).json({
+      success: true,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      failure: true,
+    });
+  }
+};
 module.exports = {
   addGroupTransaction,
   userAmountData,
   addGroup,
   getGroupTransactions,
+  settleUp,
 };
