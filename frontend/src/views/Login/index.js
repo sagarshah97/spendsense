@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios from "axios";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
-import axios from "axios";
+import logo from "../../assets/1.png";
 
 const defaultTheme = createTheme();
 
@@ -22,8 +22,8 @@ export default function Login() {
   const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [userId, setUserId] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // New state for password visibility
 
   const validateEmail = (email) => {
     const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
@@ -67,7 +67,13 @@ export default function Login() {
       .then((response) => {
         console.log(response);
         const { userId } = response.data;
+
         setUserId(userId);
+
+        sessionStorage.setItem("userId", userId);
+
+        console.log("id", userId);
+
         if (response.status === 200) {
           setLoginError("Login successful");
           setTimeout(() => {
@@ -92,39 +98,43 @@ export default function Login() {
       <Grid
         container
         component="main"
-        sx={{
-          minHeight: "100vh",
-          backgroundColor: "#ffffff",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        sx={{ minHeight: "100vh", backgroundColor: "#0f0f0f" }}
       >
-        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={false}
+          md={7}
+          lg={7}
+          sx={{
+            backgroundImage: `url(${logo})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            backgroundColor: "white",
+            paddingTop: "5%",
+          }}
+        />
+
         <Grid
           item
           xs={12}
-          sm={8}
+          sm={12}
           md={5}
+          lg={5}
           component={Paper}
-          elevation={6}
           square
-          style={{
+          sx={{
             backgroundColor: "white",
             boxShadow: "none",
-            textAlign: "center",
-            padding: "40px",
+            color: "black",
+            padding: "5%",
           }}
         >
           <Typography
             component="h1"
             variant="h5"
-            style={{
-              color: "black",
-              fontSize: "1.5rem",
-              fontWeight: 100,
-              letterSpacing: "0.3rem",
-              marginBottom: "20px",
-            }}
+            style={{ fontSize: "1.5rem", fontWeight: 100 }}
           >
             LOGIN
           </Typography>
@@ -147,34 +157,6 @@ export default function Login() {
               onChange={handleEmailChange}
               error={!!emailError}
               helperText={emailError}
-              InputProps={{
-                style: {
-                  color: "black",
-                },
-                sx: {
-                  "& fieldset": {
-                    border: "1px solid grey!important",
-                    borderRadius: 1.5,
-                  },
-                  "&:hover fieldset": {
-                    border: "1px solid black!important",
-                    borderRadius: 1.5,
-                  },
-                  "&:focus-within fieldset, &:focus-visible fieldset": {
-                    border: "1px solid blue!important",
-                  },
-                },
-              }}
-              InputLabelProps={{
-                style: {
-                  color: "black",
-                },
-              }}
-              InputOutlineProps={{
-                style: {
-                  color: "white",
-                },
-              }}
             />
             <TextField
               margin="normal"
@@ -188,23 +170,6 @@ export default function Login() {
               onChange={handlePasswordChange}
               autoComplete="current-password"
               InputProps={{
-                style: {
-                  color: "black",
-                },
-                sx: {
-                  "& fieldset": {
-                    border: "1px solid grey!important",
-                    borderRadius: 1.5,
-                  },
-                  "&:hover fieldset": {
-                    border: "1px solid black!important",
-                    borderRadius: 1.5,
-                  },
-                  "&:focus-within fieldset, &:focus-visible fieldset": {
-                    border: "1px solid blue!important",
-                  },
-                },
-                // Add the eye icon button to the password field
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
@@ -217,16 +182,6 @@ export default function Login() {
                   </InputAdornment>
                 ),
               }}
-              InputLabelProps={{
-                style: {
-                  color: "black",
-                },
-              }}
-              InputOutlineProps={{
-                style: {
-                  color: "white",
-                },
-              }}
             />
             <Button
               type="submit"
@@ -237,12 +192,7 @@ export default function Login() {
               Sign In
             </Button>
             {loginError && (
-              <Typography
-                variant="body2"
-                color="error"
-                align="center"
-                sx={{ color: "black" }}
-              >
+              <Typography variant="body2" color="error" align="center">
                 {loginError}
               </Typography>
             )}
@@ -280,10 +230,7 @@ export default function Login() {
                 color: "blue",
                 textAlign: "center",
               }}
-            >
-              {/* For now type any email and password and it will take you to the
-              HomePage for the purpose of this proposal */}
-            </Typography>
+            ></Typography>
           </Box>
         </Grid>
       </Grid>

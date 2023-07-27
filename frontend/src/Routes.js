@@ -19,11 +19,11 @@ const Router = () => {
   const location = useLocation();
   return (
     <Routes location={location} key={location.pathname}>
+      <Route path="/" element={<Login />} />
+      <Route path="/register" element={<Registration />} />
+      <Route path="/passwordreset" element={<Password />} />
       <Route path="/" element={<NavBar />}>
-        <Route path="/" element={<Login />} />
         <Route path="/homepage" element={<LandingPage />} />
-        <Route path="/register" element={<Registration />} />
-        <Route path="/passwordreset" element={<Password />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/personal" element={<PersonalTransaction />} />

@@ -18,7 +18,7 @@ import Footer from "./Footer";
 import logo from "../assets/logoWhite.png";
 
 const drawerWidth = 240;
-const navItems = ["Home", "Contact", "FAQ"];
+const navItems = ["Home", "Contact", "FAQ", "Logout"];
 
 export default function DrawerAppBar(props) {
   const navigate = useNavigate();
@@ -36,6 +36,9 @@ export default function DrawerAppBar(props) {
       navigate("/contact");
     } else if (value === "FAQ") {
       navigate("/faq");
+    } else if (value === "Logout") {
+      sessionStorage.clear();
+      navigate("/");
     }
   };
 
