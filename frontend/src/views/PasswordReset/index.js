@@ -41,9 +41,8 @@ export default function ForgotPassword() {
       return;
     }
 
-    // Send a request to your backend to handle password reset
     axios
-      .post("http://localhost:8080/api/users/reset-password", { email })
+      .post("/users/reset-password", { email })
       .then((response) => {
         // Handle success (e.g., show success message)
         setResetError("");

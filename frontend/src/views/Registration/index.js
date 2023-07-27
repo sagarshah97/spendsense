@@ -136,10 +136,7 @@ export default function Register() {
           password,
         };
 
-        const response = await axios.post(
-          "http://localhost:8080/api/users/register",
-          param
-        );
+        const response = await axios.post("/users/register", param);
 
         if (response.status === 200) {
           setRegistrationError("Registration successful");

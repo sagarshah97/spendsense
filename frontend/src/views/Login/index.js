@@ -63,16 +63,13 @@ export default function Login() {
     };
 
     axios
-      .post("http://localhost:8080/api/users/login", params)
+      .post("/users/login", params)
       .then((response) => {
-        console.log(response);
         const { userId } = response.data;
 
         setUserId(userId);
 
         sessionStorage.setItem("userId", userId);
-
-        console.log("id", userId);
 
         if (response.status === 200) {
           setLoginError("Login successful");
