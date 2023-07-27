@@ -21,7 +21,7 @@ const GroupHistory = () => {
   const fetchGroupHistory = async (selectedGroup) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/getGroupTransactions/${selectedGroup}`
+        `/getGroupTransactions/${selectedGroup}`
       );
       setGroupHistory(response.data);
     } catch (error) {
@@ -49,9 +49,7 @@ const GroupHistory = () => {
 
   const fetchGroups = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/getGroups/${userId}`
-      );
+      const response = await axios.get(`/getGroups/${userId}`);
       setGroupData(response.data);
     } catch (error) {
       console.error("Error fetching groups:", error);

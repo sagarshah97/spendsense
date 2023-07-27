@@ -69,6 +69,7 @@ const userAmountData = async (req, res) => {
         name,
         amount,
         group: groupName,
+        description: transaction.description,
       });
     }
 
@@ -87,11 +88,10 @@ const userAmountData = async (req, res) => {
         name,
         amount,
         group: groupName,
+        description: transaction.description,
       });
     }
-    res.status(200).json({
-      result: result,
-    });
+    res.status(200).json(result);
   } catch (err) {
     console.log(err);
     res.status(500).json({
