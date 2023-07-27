@@ -12,11 +12,16 @@ import GroupExpenseDashboard from "./views/GroupExpensesDashboard";
 import GroupHistory from "./views/GroupHistory";
 import LandingPage from "./views/LandingPage";
 import Trends from "./views/DisplayTrend";
+import Reports from "./views/ExpenseReport";
 import Profile from "./views/ProfilePage";
 import CalendarView from "./views/CalenderView";
 import { isTokenValid } from "./views/Login/auth";
 import UpdateExpensePage from "./views/PersonalTransaction/UpdateExpensePage";
 import UpdateIncomePage from "./views/PersonalTransaction/UpdateIncomePage";
+import GroupExpenseHomepage from "./views/GroupExpenseHomepage";
+import PersonalExpenseHomepage from "./views/PersonalExpenseHomepage";
+import AnalyticsHomepage from "./views/AnalyticsHomepage";
+import GroupTransaction from "./views/GroupTransaction";
 
 const Router = () => {
   const location = useLocation();
@@ -36,14 +41,25 @@ const Router = () => {
           <Route path="/addTransaction" element={<AddTransaction />} />
           <Route path="/update/Expense" element={<UpdateExpensePage />} />
           <Route path="/update/Income" element={<UpdateIncomePage />} />
+          <Route path="/calender" element={<CalendarView />} />
+          <Route path="/groupHistory" element={<GroupHistory />} />
+          <Route path="/trends" element={<Trends />} />
+          <Route path="/reports" element={<Reports />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/groupTransaction" element={<GroupTransaction />} />
           <Route
-            path="/GroupExpenseDashboard"
+            path="/groupExpenseDashboard"
             element={<GroupExpenseDashboard />}
           />
-          <Route path="/calender" element={<CalendarView />} />
-          <Route path="/GroupHistory" element={<GroupHistory />} />
-          <Route path="/trends" element={<Trends />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/groupexpensehomepage"
+            element={<GroupExpenseHomepage />}
+          />
+          <Route
+            path="/personalExpenseHomepage"
+            element={<PersonalExpenseHomepage />}
+          />
+          <Route path="/analyticsHomepage" element={<AnalyticsHomepage />} />
         </Route>
       ) : (
         <Route path="*" element={<Navigate to="/" replace />} />
