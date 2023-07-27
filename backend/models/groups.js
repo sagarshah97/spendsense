@@ -9,7 +9,8 @@ const groups = new Schema({
     trim: true,
   },
   members: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "users",
     required: true,
     trim: true,
   },

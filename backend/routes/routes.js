@@ -1,6 +1,4 @@
 const express = require("express");
-// const addData = require("../controllers/SampleController/add-data");
-// const findData = require("../controllers/SampleController/find-data");
 const personalTransactionController = require("../controllers/personal-transaction");
 const {
   addGroupTransaction,
@@ -9,11 +7,9 @@ const {
 } = require("../controllers/group-transaction");
 const userController = require("../controllers/userController");
 const userFriendsController = require("../controllers/user-friends");
+const groupDetailsController = require("../controllers/group-details");
 
 const router = express.Router();
-
-// router.route("/addData").post(addData);
-// router.route("/findData").get(findData);
 
 router.route("/users/register").post(userController.register);
 
@@ -39,5 +35,7 @@ router.route("/addGroup").post(addGroup);
 router.route("/addGroupTransaction").post(addGroupTransaction);
 router.route("/userAmountData").get(userAmountData);
 router.route("/users/getFriends").post(userFriendsController.getFriends);
+
+router.route("/groups/:userId").get(groupDetailsController.getGroupDetails);
 
 module.exports = router;
