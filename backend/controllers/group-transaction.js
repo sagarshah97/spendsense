@@ -5,31 +5,21 @@ const mongoose = require("mongoose");
 const User = require("../models/user-model");
 
 const addGroupTransaction = async (req, res) => {
-  const currentUserId = "123";
   const transactionId = uuid.v4();
   try {
-    let transactionData = {
-      group: 123,
-      note: "test",
-      date: "2023-07-25",
-      splitAmounts: [
-        { userid: "1", amount: 50 },
-        { userid: "2", amount: 50 },
-      ],
-    }; //req.body.transactiondata; //[{},{}]
+    let transactionData = req.body;
     const transactions = transactionData.splitAmounts.map((splitAmount) => {
       return {
         transactionId,
         groupId: transactionData.group,
         description: transactionData.note,
-        paidByUserId: currentUserId,
-        userId: splitAmount.userid,
+        paidByUserId: transactionData.paidByUserId,
+        userId: splitAmount.memberId,
         amount: splitAmount.amount,
         settledUp: false,
         timestamp: transactionData.date,
       };
     });
-    console.log(transactions);
     transactions.forEach(async (transaction) => {
       transaction.transactionId = transactionId;
       await groupTransaction.insertMany(transaction);
@@ -46,7 +36,7 @@ const addGroupTransaction = async (req, res) => {
 };
 
 const userAmountData = async (req, res) => {
-  const currentUserId = "64bf4c863528564d5a7aa3b3";
+  const currentUserId = "64c0c0af63cc30d64079845d";
   try {
     let result = { whatIOwe: [], whatImOwed: [] };
     const owedData = await groupTransaction.find({
@@ -94,9 +84,10 @@ const userAmountData = async (req, res) => {
 
 const addGroup = async (req, res) => {
   try {
-    let members = req.body.userids; //["64bf4d6e3528564d5a7aa3b5", "64bf4d7f3528564d5a7aa3b6"];
-    let name = req.body.name; //["1","2","3"]
+    let members = req.body.members;
+    let name = req.body.name;
     let newGroup = { members, name };
+    console.log(newGroup);
     await group.insertMany(newGroup);
     res.status(200).json({
       success: true,

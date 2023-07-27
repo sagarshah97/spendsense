@@ -6,7 +6,7 @@ import MemberSearchModal from "../NewGroupModal/index";
 import axios from "axios";
 
 const GroupExpensePage = ({ handleExpenseSubmit }) => {
-  const currentUser = "64c0c0af63cc30d64079845d"; //todo: get from session storage
+  const currentUser = sessionStorage.getItem("userId");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [groups, setGroups] = useState([]);
 
@@ -17,6 +17,7 @@ const GroupExpensePage = ({ handleExpenseSubmit }) => {
   }, []);
 
   const getGroupDetails = () => {
+    console.log("currentUser" + currentUser);
     axios
       .get(`/groups/${currentUser}`)
       .then((res) => {
@@ -40,7 +41,15 @@ const GroupExpensePage = ({ handleExpenseSubmit }) => {
   const handleGroupSubmit = (groupDetails) => {
     console.log(groupDetails);
     //todo: save group to db
-    getGroupDetails();
+    axios
+      .post("/addGroup", groupDetails)
+      .then((result) => {
+        console.log("success");
+        getGroupDetails();
+      })
+      .catch((error) => {
+        console.log("failure");
+      });
   };
 
   const settings = {
