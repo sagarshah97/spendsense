@@ -33,16 +33,6 @@ const GroupHistory = () => {
     selectedGroup && fetchGroupHistory(selectedGroup);
   }, [selectedGroup]);
 
-  // useEffect(() => {
-  //   // const fetchGroupHistory = () => {
-  //   //   const historyForSelectedGroup = dummyGroupHistory.filter(
-  //   //     (entry) => entry.groupId === selectedGroup
-  //   //   );
-  //   //   setGroupHistory(historyForSelectedGroup);
-  //   // };
-
-  //   fetchGroupHistory();
-  // }, [selectedGroup]);
   const handleGroupSelect = (event) => {
     setSelectedGroup(event.target.value);
   };
@@ -57,7 +47,6 @@ const GroupHistory = () => {
   };
 
   useEffect(() => {
-    // Fetch the groups from the API
     fetchGroups();
   }, []);
 

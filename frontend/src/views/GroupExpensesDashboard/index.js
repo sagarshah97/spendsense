@@ -3,11 +3,11 @@ import axios from "axios";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { Tooltip, IconButton } from "@mui/material";
+
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-
+import { Alerts } from "../../utils/Alert";
 const GroupExpenseDashboard = () => {
   const [expensesData, setExpensesData] = useState(null);
   const [totalOwe, setTotalOwe] = useState(null);
@@ -15,10 +15,45 @@ const GroupExpenseDashboard = () => {
 
   const userId = sessionStorage.getItem("userId");
 
+  // Alert Start
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("");
+  const alertObj = {
+    alertMessage: alertMessage,
+    alertType: alertType,
+  };
+  const [snackbar, setSnackbar] = React.useState(false);
+  const snackbarOpen = () => {
+    setSnackbar(true);
+  };
+  const snackbarClose = () => {
+    setSnackbar(false);
+  };
+  // Alert End
+
   const handleSettleUp = (entry) => {
-    alert(
-      `Settling up with ${entry.name} for $${entry.amount} in group ${entry.group}`
-    );
+    axios
+      .post(`/settleUp`, {
+        id: entry.id,
+      })
+      .then((resp) => {
+        if (resp.status === 200) {
+          setAlertMessage(
+            `Settled up with ${entry.name} for $${entry.amount} in group ${entry.group}`
+          );
+          setAlertType("success");
+          snackbarOpen();
+          fetchExpenseData();
+        }
+      })
+      .catch((error) => {
+        console.log(error.config);
+        console.log(error.message);
+        console.log(error.response);
+        setAlertMessage("Something went wrong, Please try again!");
+        setAlertType("error");
+        snackbarOpen();
+      });
   };
 
   const fetchExpenseData = async () => {
@@ -181,6 +216,13 @@ const GroupExpenseDashboard = () => {
             </Card>
           </Grid>
         </Grid>
+      )}
+      {snackbar && (
+        <Alerts
+          alertObj={alertObj}
+          snackbar={snackbar}
+          snackbarClose={snackbarClose}
+        />
       )}
     </div>
   );
