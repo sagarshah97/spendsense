@@ -37,7 +37,7 @@ export default function ForgotPassword() {
     event.preventDefault();
 
     if (!validateEmail(email)) {
-      setResetError("Please enter a valid email");
+      setResetError("Please enter a valid email.");
       return;
     }
 
@@ -149,7 +149,7 @@ export default function ForgotPassword() {
                 variant="body2"
                 color="error"
                 align="center"
-                sx={{ color: "black" }}
+                sx={{ color: "red" }}
               >
                 {resetError}
               </Typography>
@@ -174,7 +174,7 @@ export default function ForgotPassword() {
             </Button>
             <Typography
               variant="body2"
-              onClick={() => navigate("/login")} // Redirect back to the login page
+              onClick={() => navigate("/")} // Redirect back to the login page
               sx={{
                 textDecoration: "none",
                 color: "blue",
