@@ -153,8 +153,8 @@ const GroupExpenseDashboard = ({ width = "100%" }) => {
                   onChange={handleChange}
                   aria-label="basic tabs example"
                 >
-                  <Tab label="What I'm Owed" {...a11yProps(0)} />
-                  <Tab label="What I Owe" {...a11yProps(1)} />
+                  <Tab label="What I Owe" {...a11yProps(0)} />
+                  <Tab label="What I'm Owed" {...a11yProps(1)} />
                 </Tabs>
               </Box>
 
@@ -166,8 +166,7 @@ const GroupExpenseDashboard = ({ width = "100%" }) => {
                         variant="h5"
                         sx={{ paddingBottom: 2, textAlign: "center" }}
                       >
-                        I Owe - Total:{" "}
-                        <span style={{ color: "red" }}>${totalOwe}</span>
+                        I Owe <span style={{ color: "red" }}>${totalOwe}</span>
                       </Typography>
                       {expensesData.whatIOwe.length === 0 ? (
                         <Typography
@@ -180,7 +179,7 @@ const GroupExpenseDashboard = ({ width = "100%" }) => {
                       ) : (
                         expensesData.whatIOwe.map((expense, index) => (
                           <Grid container spacing={2}>
-                            {expensesData.whatImOwed.map((expense, index) => (
+                            {expensesData.whatIOwe.map((expense, index) => (
                               <>
                                 <Grid item xs={9}>
                                   <Typography variant="body1">
@@ -221,7 +220,7 @@ const GroupExpenseDashboard = ({ width = "100%" }) => {
                         variant="h5"
                         sx={{ paddingBottom: 2, textAlign: "center" }}
                       >
-                        I'm Owed - Total:{" "}
+                        I'm Owed{" "}
                         <span style={{ color: "green" }}>${totalOwed}</span>
                       </Typography>
                       {expensesData.whatImOwed.length === 0 ? (

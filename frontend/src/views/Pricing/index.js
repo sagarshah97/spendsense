@@ -14,25 +14,27 @@ import Switch from "@mui/material/Switch";
 import { Paper } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
+import { useNavigate } from "react-router-dom";
 const PricingPage = () => {
+  const navigate = useNavigate();
   const [yearly, setYearly] = useState(false);
   const yearlyValue = "107.99";
   return (
     <>
       <Grid container spacing={2} sx={{ marginTop: "20px" }}>
-        <Grid item xs={12} sx={{ textAlign: "center" }}>
+        {/* <Grid item xs={12} sx={{ textAlign: "center" }}>
           <Typography variant="h5">SPENDSENSE</Typography>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} sx={{ textAlign: "center" }}>
           <Typography variant="h2">Pricing Options</Typography>
         </Grid>
-        <Grid item xs={12} sx={{ textAlign: "center" }}>
+        <Grid item xs={12} sx={{ textAlign: "center", padding: "2%" }}>
           <Typography variant="h6">
             Switch to a commercial plan to access advanced features & technical
             support.
           </Typography>
         </Grid>
-        <Grid item xs={12} sx={{ textAlign: "center" }}>
+        <Grid item xs={12} sx={{ textAlign: "center", padding: "2%" }}>
           Monthly
           <Switch
             onChange={() => {
@@ -40,104 +42,108 @@ const PricingPage = () => {
             }}
           />
           Yearly{" "}
-          {/* <Typography
-            variant="h6"
-            style={{ display: "inline-block", color: "#999999" }}
-          >
-            (10% off)
-          </Typography> */}
         </Grid>
         <Grid item xs={2} sx={{ textAlign: "center" }}></Grid>
         <Grid item xs={4} sx={{ textAlign: "center" }}>
-          <Card className="card" sx={{ padding: "20px 0" }}>
-            <Typography variant="h6">Community</Typography>
-            <Typography variant="h3" style={{ display: "inline-block" }}>
+          <Card className="card-free" sx={{ padding: "20px 0" }}>
+            <Typography variant="h6">COMMUNITY</Typography>
+            <Typography
+              variant="h3"
+              style={{ display: "inline-block", padding: "3%" }}
+            >
               Free
             </Typography>{" "}
-            {/* <Typography
-              variant="h5"
-              style={{
-                display: "inline-block",
-                textDecoration: "line-through",
+            <Typography variant="h6" className="feature-spacing">
+              <DoneIcon color="primary" />
+              Personal Expense Tracker
+            </Typography>
+            <Typography variant="h6" className="feature-spacing">
+              <DoneIcon color="primary" />
+              Shared Expense Manager
+            </Typography>
+            <Typography variant="h6" className="feature-spacing">
+              <DoneIcon color="primary" />
+              Manage Group Members
+            </Typography>
+            <Typography
+              variant="h6"
+              sx={{ textDecoration: "line-through" }}
+              className="feature-spacing"
+            >
+              <CloseIcon color="secondary" />
+              View Expense Trends
+            </Typography>
+            <Typography
+              variant="h6"
+              sx={{ textDecoration: "line-through" }}
+              className="feature-spacing"
+            >
+              <CloseIcon color="secondary" />
+              Download Monthly Statements
+            </Typography>
+            <Button
+              variant="outlined"
+              className="pricing-button"
+              onClick={() => {
+                navigate("/contact");
               }}
             >
-              {" "}
-              {yearly ? "/ year" : "/ month"}
-            </Typography> */}
-            <Typography variant="h6">
-              <DoneIcon color="primary" />
-              Feature 1
-            </Typography>
-            <Typography variant="h6">
-              <DoneIcon color="primary" />
-              Feature 2
-            </Typography>
-            <Typography variant="h6">
-              <DoneIcon color="primary" />
-              Feature 3
-            </Typography>
-            <Typography variant="h6">
-              <DoneIcon color="primary" />
-              Feature 4
-            </Typography>
-            <Typography
-              variant="h6"
-              sx={{ textDecoration: "line-through", color: "#999999" }}
-            >
-              <CloseIcon color="secondary" />
-              Feature 5
-            </Typography>
-            <Typography
-              variant="h6"
-              sx={{ textDecoration: "line-through", color: "#999999" }}
-            >
-              <CloseIcon color="secondary" />
-              Feature 6
-            </Typography>
+              Contact Us
+            </Button>
           </Card>
         </Grid>
         <Grid item xs={4} sx={{ textAlign: "center" }}>
-          <Card className="card" sx={{ padding: "20px 0" }}>
-            <Typography variant="h6">Pro</Typography>
-            <Typography variant="h3" style={{ display: "inline-block" }}>
-              {yearly ? "$107.99" : "$9.99"}
-            </Typography>{" "}
-            <Typography variant="h5" style={{ display: "inline-block" }}>
-              {" "}
-              {yearly ? "/ year" : "/ month"}
-            </Typography>
-            {yearly && (
-              <Typography
-                variant="h6"
-                style={{ display: "inline-block", color: "#999999" }}
-              >
-                (10% off)
+          <Card className="card-pro" sx={{ padding: "20px 0" }}>
+            <Typography variant="h6">PRO</Typography>
+            <div style={{ padding: "3%" }}>
+              <Typography variant="h3" style={{ display: "inline-block" }}>
+                {yearly ? "$107.99" : "$9.99"}
+              </Typography>{" "}
+              <Typography variant="h5" style={{ display: "inline-block" }}>
+                {" "}
+                {yearly ? "/ year" : "/ month"}
               </Typography>
-            )}
-            <Typography variant="h6">
+              {yearly && (
+                <Typography
+                  variant="h6"
+                  style={{
+                    display: "inline-block",
+                    color: "#eeeeee",
+                  }}
+                >
+                  (10% off)
+                </Typography>
+              )}
+            </div>
+            <Typography variant="h6" className="feature-spacing">
               <DoneIcon color="primary" />
-              Feature 1
+              Personal Expense Tracker
             </Typography>
-            <Typography variant="h6">
+            <Typography variant="h6" className="feature-spacing">
               <DoneIcon color="primary" />
-              Feature 2
+              Shared Expense Manager
             </Typography>
-            <Typography variant="h6">
+            <Typography variant="h6" className="feature-spacing">
               <DoneIcon color="primary" />
-              Feature 3
+              Manage Group Members
             </Typography>
-            <Typography variant="h6">
+            <Typography variant="h6" className="feature-spacing">
               <DoneIcon color="primary" />
-              Feature 4
+              View Expense Trends
             </Typography>
-            <Typography variant="h6">
+            <Typography variant="h6" className="feature-spacing">
               <DoneIcon color="primary" />
-              Feature 6
+              Download Monthly Statements
             </Typography>
-            <Typography variant="h6">
-              <DoneIcon color="primary" />
-              Feature 6
-            </Typography>
+            <Button
+              variant="outlined"
+              className="pricing-button"
+              onClick={() => {
+                navigate("/contact");
+              }}
+            >
+              Contact Us
+            </Button>
           </Card>
         </Grid>
         <Grid item xs={2} sx={{ textAlign: "center" }}></Grid>
