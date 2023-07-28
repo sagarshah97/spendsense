@@ -21,7 +21,7 @@ const GroupHistory = () => {
   const fetchGroupHistory = async (selectedGroup) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/getGroupTransactions/${selectedGroup}`
+        `/getGroupTransactions/${selectedGroup}`
       );
       setGroupHistory(response.data);
     } catch (error) {
@@ -33,25 +33,13 @@ const GroupHistory = () => {
     selectedGroup && fetchGroupHistory(selectedGroup);
   }, [selectedGroup]);
 
-  // useEffect(() => {
-  //   // const fetchGroupHistory = () => {
-  //   //   const historyForSelectedGroup = dummyGroupHistory.filter(
-  //   //     (entry) => entry.groupId === selectedGroup
-  //   //   );
-  //   //   setGroupHistory(historyForSelectedGroup);
-  //   // };
-
-  //   fetchGroupHistory();
-  // }, [selectedGroup]);
   const handleGroupSelect = (event) => {
     setSelectedGroup(event.target.value);
   };
 
   const fetchGroups = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/getGroups/${userId}`
-      );
+      const response = await axios.get(`/getGroups/${userId}`);
       setGroupData(response.data);
     } catch (error) {
       console.error("Error fetching groups:", error);
@@ -59,12 +47,11 @@ const GroupHistory = () => {
   };
 
   useEffect(() => {
-    // Fetch the groups from the API
     fetchGroups();
   }, []);
 
   return (
-    <div style={{ maxWidth: "75%", margin: "0 auto" }}>
+    <div style={{ maxWidth: "75%", margin: "0 auto", paddingBottom: "30px" }}>
       <Typography
         variant="h4"
         align="center"

@@ -3,6 +3,7 @@ const group = require("../models/groups");
 const uuid = require("uuid");
 const mongoose = require("mongoose");
 const User = require("../models/user-model");
+const Transaction = require("../models/transaction");
 
 const addGroupTransaction = async (req, res) => {
   const transactionId = uuid.v4();
@@ -36,14 +37,22 @@ const addGroupTransaction = async (req, res) => {
 };
 
 const userAmountData = async (req, res) => {
-  const currentUserId = "64c0c0af63cc30d64079845d";
+  const currentUserId = req.params.userId;
   try {
     let result = { whatIOwe: [], whatImOwed: [] };
     const owedData = await groupTransaction.find({
-      paidByUserId: currentUserId,
+      $and: [
+        { paidByUserId: currentUserId },
+        { userId: { $ne: currentUserId } },
+        { settledUp: false },
+      ],
     });
     const oweData = await groupTransaction.find({
-      userId: currentUserId,
+      $and: [
+        { userId: currentUserId },
+        { paidByUserId: { $ne: currentUserId } },
+        { settledUp: false },
+      ],
     });
 
     for (const transaction of owedData) {
@@ -56,7 +65,13 @@ const userAmountData = async (req, res) => {
       });
       let groupName = groupDetails[0].name;
       let name = user[0].firstname + " " + user[0].lastname;
-      result.whatImOwed.push({ name, amount, group: groupName });
+      result.whatImOwed.push({
+        id: transaction._id,
+        name,
+        amount,
+        group: groupName,
+        description: transaction.description,
+      });
     }
 
     for (const transaction of oweData) {
@@ -67,13 +82,17 @@ const userAmountData = async (req, res) => {
       let user = await User.find({
         _id: new mongoose.Types.ObjectId(transaction.paidByUserId),
       });
-      let groupName = groupDetails.name;
+      let groupName = groupDetails[0].name;
       let name = user[0].firstname + " " + user[0].lastname;
-      result.whatIOwe.push({ name, amount, group: groupName });
+      result.whatIOwe.push({
+        id: transaction._id,
+        name,
+        amount,
+        group: groupName,
+        description: transaction.description,
+      });
     }
-    res.status(200).json({
-      result: result,
-    });
+    res.status(200).json(result);
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -165,9 +184,75 @@ const getGroupTransactions = async (req, res) => {
   }
 };
 
+const settleUp = async (req, res) => {
+  try {
+    let transactionOId = req.body.id;
+    const updateResult = await groupTransaction.updateOne(
+      {
+        _id: new mongoose.Types.ObjectId(transactionOId),
+      },
+      {
+        $set: {
+          settledUp: true,
+        },
+      }
+    );
+    res.status(200).json({
+      success: true,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      failure: true,
+    });
+  }
+};
+
+const expenseReportData = async (req, res) => {
+  try {
+    let userId = req.body.id;
+    let month = req.body.month;
+    const expenseReportData = await Transaction.find(
+      {
+        userId: userId,
+      },
+      "typeOfTransaction date amount category"
+    );
+    const updatedExpenseReportData = expenseReportData.map((data) => ({
+      typeOfTransaction: data.typeOfTransaction,
+      category: data.category,
+      amount: data.amount,
+      date: formatDate(data.date),
+    }));
+
+    const finalUpdatedExpenseReportData = [];
+    for (let i = 0; i < updatedExpenseReportData.length; i++) {
+      const data = updatedExpenseReportData[i];
+      if (data.date.split("-")[1] == month) {
+        finalUpdatedExpenseReportData.push(data);
+      }
+    }
+    res.status(200).json(finalUpdatedExpenseReportData);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      failure: true,
+    });
+  }
+};
+
+const formatDate = (date) => {
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  return `${year}-${day}-${month}`;
+};
+
 module.exports = {
   addGroupTransaction,
   userAmountData,
   addGroup,
   getGroupTransactions,
+  settleUp,
+  expenseReportData,
 };
