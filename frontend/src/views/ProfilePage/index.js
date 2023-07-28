@@ -16,6 +16,7 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
+import { Alerts } from "../../utils/Alert";
 
 function UserProfile() {
   const [usersList, setUsersList] = useState([]);
@@ -27,6 +28,23 @@ function UserProfile() {
     friends: [],
   });
   const [loading, setLoading] = useState(true);
+  const [emailError, setEmailError] = useState("");
+
+  // Alert Start
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("");
+  const alertObj = {
+    alertMessage: alertMessage,
+    alertType: alertType,
+  };
+  const [snackbar, setSnackbar] = React.useState(false);
+  const snackbarOpen = () => {
+    setSnackbar(true);
+  };
+  const snackbarClose = () => {
+    setSnackbar(false);
+  };
+  // Alert End
 
   const getUserDetails = async () => {
     try {
@@ -98,6 +116,17 @@ function UserProfile() {
     };
   };
 
+  const isEmailValid = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailChange = (e) => {
+    const email = e.target.value;
+    setSelectedFriend(email);
+    setEmailError(isEmailValid(email) ? "" : "Invalid email format");
+  };
+
   useEffect(() => {
     getUserDetails();
 
@@ -116,15 +145,40 @@ function UserProfile() {
   }, []);
 
   const handleAddFriend = () => {
+    if (!isEmailValid(selectedFriend)) {
+      setEmailError("Invalid email format");
+      return;
+    }
+
+    const isEmailExists = usersList.some(
+      (user) => user.email === selectedFriend
+    );
+
+    if (!isEmailExists) {
+      setAlertMessage("User is not on SpendSense.");
+      setAlertType("error");
+      snackbarOpen();
+      return;
+    }
+
     const isAlreadyFriend = userData.friends.some(
       (friend) => friend.email === selectedFriend
     );
     console.log(selectedFriend);
 
     if (isAlreadyFriend) {
-      // If selected friend is already a friend, show an alert
-      alert("Selected friend is already a friend.");
+      setAlertMessage("Selected friend is already a friend.");
+      setAlertType("error");
+      snackbarOpen();
     } else {
+      // Prevent adding themselves as a friend
+      if (selectedFriend === userData.email) {
+        setAlertMessage("You cannot add yourself as a friend.");
+        setAlertType("error");
+        snackbarOpen();
+        return;
+      }
+
       axios
         .post("/addfriend", {
           userId: window.sessionStorage.getItem("userId"),
@@ -253,6 +307,16 @@ function UserProfile() {
         >
           <Grid item xs={12} md={6} lg={8}>
             <TextField
+              fullWidth
+              label="Enter an email address"
+              value={selectedFriend}
+              onChange={handleEmailChange} // Use handleEmailChange for input change
+              variant="outlined"
+              error={Boolean(emailError)}
+              helperText={emailError}
+            />
+
+            {/* <TextField
               select
               fullWidth
               label="Select an email from the dropdown"
@@ -266,7 +330,7 @@ function UserProfile() {
                   {user.email}
                 </MenuItem>
               ))}
-            </TextField>
+            </TextField> */}
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
@@ -287,6 +351,13 @@ function UserProfile() {
           </Grid>
         </Grid>
       </Grid>
+      {snackbar && (
+        <Alerts
+          alertObj={alertObj}
+          snackbar={snackbar}
+          snackbarClose={snackbarClose}
+        />
+      )}
     </Container>
   );
 }
