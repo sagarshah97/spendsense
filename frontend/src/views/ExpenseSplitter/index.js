@@ -319,6 +319,7 @@ const ExpenseSplitter = ({
             <MenuItem value="Rent">Rent</MenuItem>
             <MenuItem value="Transportation">Transportation</MenuItem>
             <MenuItem value="Entertainment">Entertainment</MenuItem>
+            <MenuItem value="Other">Other</MenuItem>
           </Select>
         </FormControl>
         <TextField
