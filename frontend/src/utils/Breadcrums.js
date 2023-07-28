@@ -22,6 +22,7 @@ export const CustomBreadcrumbs = (props) => {
             onClick={() => {
               navigate(item.link);
             }}
+            key={index}
           >
             {item.text}
           </Button>

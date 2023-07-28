@@ -43,8 +43,8 @@ const PricingPage = () => {
           />
           Yearly{" "}
         </Grid>
-        <Grid item xs={2} sx={{ textAlign: "center" }}></Grid>
-        <Grid item xs={4} sx={{ textAlign: "center" }}>
+        <Grid item xs={0} md={2} sx={{ textAlign: "center" }}></Grid>
+        <Grid item xs={12} md={4} sx={{ textAlign: "center" }}>
           <Card className="card-free" sx={{ padding: "20px 0" }}>
             <Typography variant="h6">COMMUNITY</Typography>
             <Typography
@@ -92,7 +92,7 @@ const PricingPage = () => {
             </Button>
           </Card>
         </Grid>
-        <Grid item xs={4} sx={{ textAlign: "center" }}>
+        <Grid item xs={12} md={4} sx={{ textAlign: "center" }}>
           <Card className="card-pro" sx={{ padding: "20px 0" }}>
             <Typography variant="h6">PRO</Typography>
             <div style={{ padding: "3%" }}>
@@ -146,7 +146,7 @@ const PricingPage = () => {
             </Button>
           </Card>
         </Grid>
-        <Grid item xs={2} sx={{ textAlign: "center" }}></Grid>
+        <Grid item xs={0} md={2} sx={{ textAlign: "center" }}></Grid>
       </Grid>
       {/* <div className="pricing-container">
       <Typography variant="h4" align="center" gutterBottom>

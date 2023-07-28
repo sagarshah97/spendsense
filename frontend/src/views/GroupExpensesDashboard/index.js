@@ -177,35 +177,35 @@ const GroupExpenseDashboard = ({ width = "100%" }) => {
                           You are all settled up!
                         </Typography>
                       ) : (
-                        expensesData.whatIOwe.map((expense, index) => (
-                          <Grid container spacing={2}>
-                            {expensesData.whatIOwe.map((expense, index) => (
-                              <>
-                                <Grid item xs={9}>
-                                  <Typography variant="body1">
-                                    I owe {expense.name}{" "}
-                                    <span style={{ color: "red" }}>
-                                      ${expense.amount}
-                                    </span>{" "}
-                                    in group {expense.group} for{" "}
-                                    {expense.description}
-                                  </Typography>
-                                </Grid>
-                                <Grid item xs={3}>
-                                  <Button
-                                    onClick={() => handleSettleUp(expense)}
-                                    variant="contained"
-                                    color="primary"
-                                    endIcon={<MonetizationOnIcon />}
-                                    size="small"
-                                  >
-                                    Settle
-                                  </Button>
-                                </Grid>
-                              </>
-                            ))}
-                          </Grid>
-                        ))
+                        //expensesData.whatIOwe.map((expense, index) => (
+                        <Grid container spacing={2}>
+                          {expensesData.whatIOwe.map((expense, index) => (
+                            <>
+                              <Grid item xs={12} md={9}>
+                                <Typography variant="body1">
+                                  I owe {expense.name}{" "}
+                                  <span style={{ color: "red" }}>
+                                    ${expense.amount}
+                                  </span>{" "}
+                                  in group {expense.group} for{" "}
+                                  {expense.description}
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={12} md={3}>
+                                <Button
+                                  onClick={() => handleSettleUp(expense)}
+                                  variant="contained"
+                                  color="primary"
+                                  endIcon={<MonetizationOnIcon />}
+                                  size="small"
+                                >
+                                  Settle
+                                </Button>
+                              </Grid>
+                            </>
+                          ))}
+                        </Grid>
+                        // ))
                       )}
                     </div>
                   )}
@@ -234,7 +234,7 @@ const GroupExpenseDashboard = ({ width = "100%" }) => {
                       ) : (
                         <Grid container spacing={2}>
                           {expensesData.whatImOwed.map((expense, index) => (
-                            <>
+                            <div key={index}>
                               <Grid item xs={9}>
                                 <Typography variant="body1">
                                   {expense.name} owes me{" "}
@@ -256,7 +256,7 @@ const GroupExpenseDashboard = ({ width = "100%" }) => {
                                   Settle
                                 </Button>
                               </Grid>
-                            </>
+                            </div>
                           ))}
                         </Grid>
                       )}

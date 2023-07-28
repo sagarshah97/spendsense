@@ -4,7 +4,7 @@ import axios from "axios";
 import ScrollToTop from "./utils/ScrollToTop";
 
 function App() {
-  axios.defaults.baseURL = "http://localhost:8080";
+  axios.defaults.baseURL = "https://ti-backend-uvfq.onrender.com";
   return (
     <>
       <BrowserRouter>
