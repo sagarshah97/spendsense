@@ -5,7 +5,7 @@ import ExpenseSplitter from "../ExpenseSplitter/index";
 import MemberSearchModal from "../NewGroupModal/index";
 import axios from "axios";
 
-const GroupExpensePage = ({ handleExpenseSubmit }) => {
+const GroupExpensePage = ({ handleGroupExpenseSubmit }) => {
   const currentUser = sessionStorage.getItem("userId");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [groups, setGroups] = useState([]);
@@ -39,8 +39,6 @@ const GroupExpensePage = ({ handleExpenseSubmit }) => {
   };
 
   const handleGroupSubmit = (groupDetails) => {
-    console.log(groupDetails);
-    //todo: save group to db
     axios
       .post("/addGroup", groupDetails)
       .then((result) => {
@@ -64,6 +62,11 @@ const GroupExpensePage = ({ handleExpenseSubmit }) => {
     event.preventDefault();
   };
 
+  // const temp = () => {
+  //   console.log("in temp");
+  //   handleGroupExpenseSubmit();
+  // };
+
   return (
     <>
       <div className="page-container GroupExpensePage">
@@ -77,6 +80,7 @@ const GroupExpensePage = ({ handleExpenseSubmit }) => {
                   <ExpenseSplitter
                     groups={groups}
                     handleOpenModal={handleOpenModal}
+                    handleExpenseSubmitted={handleGroupExpenseSubmit}
                   />
                   {isModalOpen && (
                     <MemberSearchModal

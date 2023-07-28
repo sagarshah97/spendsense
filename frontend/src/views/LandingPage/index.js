@@ -44,11 +44,11 @@ const HomePage = () => {
   const handleCategoryClick = (categoryTitle) => {
     console.log(`Clicked on category: ${categoryTitle}`);
     if (categoryTitle === "Personal Expenses") {
-      navigate("/personal");
+      navigate("/personalExpenseHomepage");
     } else if (categoryTitle === "Shared Expenses") {
-      navigate("/GroupExpenseDashboard");
+      navigate("/groupexpensehomepage");
     } else if (categoryTitle === "Reports and Analytics") {
-      navigate("/trends");
+      navigate("/analyticsHomepage");
     } else if (categoryTitle === "Personal Profile") {
       navigate("/profile");
     }
