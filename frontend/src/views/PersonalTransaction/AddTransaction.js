@@ -9,7 +9,6 @@ import Box from "@mui/material/Box";
 import { Grid } from "@mui/material";
 import ExpensePage from "./ExpensePage";
 import IncomePage from "./IncomePage";
-import GroupExpensePage from "./GroupExpensePage";
 
 const AddTransaction = ({ width = "100%" }) => {
   const [expenses, setExpenses] = useState([]);
@@ -62,10 +61,6 @@ const AddTransaction = ({ width = "100%" }) => {
     setIncomes([...incomes, income]);
   };
 
-  const handleGroupExpenseSubmit = (expense) => {
-    console.log(expense);
-  };
-
   return (
     <div className="tracker-container">
       <Grid
@@ -88,7 +83,6 @@ const AddTransaction = ({ width = "100%" }) => {
               >
                 <Tab label="Add Expense" {...a11yProps(0)} />
                 <Tab label="Add Income" {...a11yProps(1)} />
-                <Tab label="Add Group Expense" {...a11yProps(2)} />
               </Tabs>
             </Box>
 
@@ -98,12 +92,6 @@ const AddTransaction = ({ width = "100%" }) => {
 
             <CustomTabPanel value={value} index={1}>
               <IncomePage handleIncomeSubmit={handleIncomeSubmit} />
-            </CustomTabPanel>
-
-            <CustomTabPanel value={value} index={2}>
-              <GroupExpensePage
-                handleGroupExpenseSubmit={handleGroupExpenseSubmit}
-              />
             </CustomTabPanel>
           </Box>
         </Grid>

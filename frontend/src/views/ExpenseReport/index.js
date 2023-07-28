@@ -12,6 +12,8 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Grid,
+  Box,
 } from "@mui/material";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
@@ -86,57 +88,77 @@ const ExpenseReportPage = () => {
   };
 
   return (
-    <Container maxWidth="md">
-      <Typography variant="h4" align="center" sx={{ mt: 4, mb: 2 }}>
-        Expense Report
-      </Typography>
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <FormControl style={{ width: "10rem" }}>
-          <InputLabel id="month-label">Select Month</InputLabel>
-          <Select
-            labelId="month-label"
-            label="Select Month"
-            id="month-select"
-            value={chosenMonth}
-            onChange={handleMonthChange}
-          >
-            {months.map((month, index) => (
-              <MenuItem key={index} value={month}>
-                {month}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </div>
-      {chosenMonth && (
-        <div>
-          <>
-            <Table id="expense-table" style={{ overflowWrap: "anywhere" }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{ fontWeight: 700 }}>
-                    Expense Name
-                  </TableCell>
-                  <TableCell style={{ fontWeight: 700 }}>Date</TableCell>
-                  <TableCell style={{ fontWeight: 700 }}>Amount</TableCell>
-                  <TableCell style={{ fontWeight: 700 }}>Category</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>{generateExpenseReport()}</TableBody>
-            </Table>
-            <div style={{ textAlign: "center", marginTop: "20px" }}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleExportPDF}
+    <Box style={{ padding: "3%" }}>
+      <Container
+        maxWidth="md"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Typography variant="h6">Expense Report</Typography>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <FormControl fullWidth>
+              <InputLabel id="month-label">Select Month</InputLabel>
+              <Select
+                labelId="month-label"
+                label="Select Month"
+                id="month-select"
+                value={chosenMonth}
+                onChange={handleMonthChange}
               >
-                Export as PDF
-              </Button>
-            </div>
-          </>
-        </div>
-      )}
-    </Container>
+                {months.map((month, index) => (
+                  <MenuItem key={index} value={month}>
+                    {month}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            {chosenMonth && (
+              <div>
+                <>
+                  <Table
+                    id="expense-table"
+                    style={{ overflowWrap: "anywhere" }}
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell style={{ fontWeight: 700 }}>
+                          Expense Name
+                        </TableCell>
+                        <TableCell style={{ fontWeight: 700 }}>Date</TableCell>
+                        <TableCell style={{ fontWeight: 700 }}>
+                          Amount
+                        </TableCell>
+                        <TableCell style={{ fontWeight: 700 }}>
+                          Category
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>{generateExpenseReport()}</TableBody>
+                  </Table>
+                  <div style={{ textAlign: "center", marginTop: "20px" }}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleExportPDF}
+                    >
+                      Export as PDF
+                    </Button>
+                  </div>
+                </>
+              </div>
+            )}
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
   );
 };
 
