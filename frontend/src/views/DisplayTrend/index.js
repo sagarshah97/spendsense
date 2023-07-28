@@ -14,7 +14,7 @@ import { Line, Bar, Radar } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import predictTotalExpense from "../../utils/ExpensePredictor";
 import axios from "axios";
-
+import { CustomBreadcrumbs } from "../../utils/Breadcrums";
 const ExpenseGraph = () => {
   const months = [
     { id: "1", name: "January" },
@@ -129,6 +129,13 @@ const ExpenseGraph = () => {
 
   return (
     <>
+      <CustomBreadcrumbs
+        pages={[
+          { text: "Home", link: "/homepage" },
+          { text: "Report - Home", link: "/analyticsHomepage" },
+          { text: "Trends", link: "/trends" },
+        ]}
+      />
       <Box style={{ padding: "3%" }}>
         <Container
           maxWidth="md"

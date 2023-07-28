@@ -18,6 +18,7 @@ import {
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import axios from "axios";
+import { CustomBreadcrumbs } from "../../utils/Breadcrums";
 
 const ExpenseReportPage = () => {
   const months = [
@@ -92,93 +93,104 @@ const ExpenseReportPage = () => {
   };
 
   return (
-    <Box style={{ padding: "3%" }}>
-      <Container
-        maxWidth="md"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography variant="h6">Expense Report</Typography>
-          </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            <FormControl fullWidth>
-              <InputLabel id="month-label">Select Month</InputLabel>
-              <Select
-                labelId="month-label"
-                label="Select Month"
-                id="month-select"
-                value={chosenMonth}
-                onChange={handleMonthChange}
-              >
-                {months.map((month, index) => (
-                  <MenuItem key={index} value={month.id}>
-                    {month.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            {chosenMonth && isDataAvailable && (
-              <div>
-                <>
-                  <Table
-                    id="expense-table"
-                    style={{ overflowWrap: "anywhere" }}
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell style={{ fontWeight: 700 }}>
-                          Expense Number
-                        </TableCell>
-                        <TableCell style={{ fontWeight: 700 }}>Date</TableCell>
-                        <TableCell style={{ fontWeight: 700 }}>
-                          Amount
-                        </TableCell>
-                        <TableCell style={{ fontWeight: 700 }}>
-                          Category
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>{generateExpenseReport()}</TableBody>
-                  </Table>
-                  <div style={{ textAlign: "center", marginTop: "20px" }}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleExportPDF}
+    <>
+      <CustomBreadcrumbs
+        pages={[
+          { text: "Home", link: "/homepage" },
+          { text: "Report - Home", link: "/analyticsHomepage" },
+          { text: "Expense Report", link: "/reports" },
+        ]}
+      />
+      <Box style={{ padding: "3%" }}>
+        <Container
+          maxWidth="md"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Typography variant="h6">Expense Report</Typography>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <FormControl fullWidth>
+                <InputLabel id="month-label">Select Month</InputLabel>
+                <Select
+                  labelId="month-label"
+                  label="Select Month"
+                  id="month-select"
+                  value={chosenMonth}
+                  onChange={handleMonthChange}
+                >
+                  {months.map((month, index) => (
+                    <MenuItem key={index} value={month.id}>
+                      {month.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              {chosenMonth && isDataAvailable && (
+                <div>
+                  <>
+                    <Table
+                      id="expense-table"
+                      style={{ overflowWrap: "anywhere" }}
                     >
-                      Export as PDF
-                    </Button>
-                  </div>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell style={{ fontWeight: 700 }}>
+                            Expense Number
+                          </TableCell>
+                          <TableCell style={{ fontWeight: 700 }}>
+                            Date
+                          </TableCell>
+                          <TableCell style={{ fontWeight: 700 }}>
+                            Amount
+                          </TableCell>
+                          <TableCell style={{ fontWeight: 700 }}>
+                            Category
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>{generateExpenseReport()}</TableBody>
+                    </Table>
+                    <div style={{ textAlign: "center", marginTop: "20px" }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleExportPDF}
+                      >
+                        Export as PDF
+                      </Button>
+                    </div>
+                  </>
+                </div>
+              )}
+              {!isDataAvailable && (
+                <>
+                  <Grid item xs={12} sm={12} md={12} lg={12}>
+                    <Typography
+                      style={{
+                        fontSize: "1.2rem",
+                        fontWeight: "200",
+                        padding: "3%",
+                        textAlign: "center",
+                      }}
+                    >
+                      No data available
+                    </Typography>
+                  </Grid>
                 </>
-              </div>
-            )}
-            {!isDataAvailable && (
-              <>
-                <Grid item xs={12} sm={12} md={12} lg={12}>
-                  <Typography
-                    style={{
-                      fontSize: "1.2rem",
-                      fontWeight: "200",
-                      padding: "3%",
-                      textAlign: "center",
-                    }}
-                  >
-                    No data available
-                  </Typography>
-                </Grid>
-              </>
-            )}
+              )}
+            </Grid>
           </Grid>
-        </Grid>
-      </Container>
-    </Box>
+        </Container>
+      </Box>
+    </>
   );
 };
 
