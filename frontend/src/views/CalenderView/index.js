@@ -29,9 +29,7 @@ const CalendarView = () => {
 			.then((response) => {
 				const date = moment
 					.utc(response.data.transactions.date)
-					.add(3, 'hours')
 					.tz('America/Halifax');
-				console.log('response.data', response.data);
 				const events = response.data.transactions.map(
 					(transaction) => ({
 						start: new Date(date),
@@ -54,7 +52,7 @@ const CalendarView = () => {
 
 	useEffect(() => {
 		fetchTransactions();
-	}, [refresh]); // dependency array now includes refresh
+	}, [refresh, events]); // dependency array now includes refresh
 
 	const handleSelectSlot = (slotInfo) => {
 		setSelectedDate(slotInfo.start);
