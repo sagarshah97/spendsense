@@ -228,7 +228,7 @@ const expenseReportData = async (req, res) => {
     const finalUpdatedExpenseReportData = [];
     for (let i = 0; i < updatedExpenseReportData.length; i++) {
       const data = updatedExpenseReportData[i];
-      if (data.date.split("-")[1] == month) {
+      if (Number(data.date.split("-")[1]) == Number(month)) {
         finalUpdatedExpenseReportData.push(data);
       }
     }
@@ -245,7 +245,7 @@ const formatDate = (date) => {
   const day = date.getDate().toString().padStart(2, "0");
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const year = date.getFullYear();
-  return `${year}-${day}-${month}`;
+  return `${year}-${month}-${day}`;
 };
 
 module.exports = {
