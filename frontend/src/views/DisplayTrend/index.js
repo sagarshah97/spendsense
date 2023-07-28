@@ -16,7 +16,6 @@ import predictTotalExpense from "../../utils/ExpensePredictor";
 import axios from "axios";
 
 const ExpenseGraph = () => {
-  // const month = "July";
   const months = [
     { id: "1", name: "January" },
     { id: "2", name: "February" },
@@ -31,38 +30,6 @@ const ExpenseGraph = () => {
     { id: "11", name: "November" },
     { id: "12", name: "December" },
   ];
-  // const monthlyExpenses = [
-  //   {
-  //     id: 1,
-  //     date: "July 1, 2023",
-  //     expense: 100,
-  //   },
-  //   {
-  //     id: 2,
-  //     date: "July 3, 2023",
-  //     expense: 80,
-  //   },
-  //   {
-  //     id: 3,
-  //     date: "July 4, 2023",
-  //     expense: 120,
-  //   },
-  //   {
-  //     id: 4,
-  //     date: "July 5, 2023",
-  //     expense: 90,
-  //   },
-  //   {
-  //     id: 5,
-  //     date: "July 10, 2023",
-  //     expense: 150,
-  //   },
-  //   {
-  //     id: 6,
-  //     date: "July 12, 2023",
-  //     expense: 110,
-  //   },
-  // ];
 
   const [monthlyExpenses, setMonthlyExpenses] = useState([]);
 
@@ -120,8 +87,8 @@ const ExpenseGraph = () => {
 
   const calculateProjectedExpense = () => {
     const projectedExpense = predictTotalExpense(
-      monthlyExpenses.map(({ date, amount }) => ({
-        day: date,
+      monthlyExpenses.map(({ date, amount }, index) => ({
+        day: index,
         expense: amount,
       }))
     );
