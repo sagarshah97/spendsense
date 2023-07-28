@@ -10,6 +10,7 @@ import { Grid, Container, Typography, Button } from "@mui/material";
 import GroupExpensePage from "./GroupExpensePage";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import AddIcon from "@mui/icons-material/Add";
+import { CustomBreadcrumbs } from "../../utils/Breadcrums";
 
 const GroupTransaction = ({ width = "100%" }) => {
   function CustomTabPanel(props) {
@@ -62,74 +63,83 @@ const GroupTransaction = ({ width = "100%" }) => {
   };
 
   return (
-    <div className="tracker-container">
-      <Grid
-        container
-        spacing={1}
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: width,
-        }}
-      >
-        <Grid item xs={12} sm={12} md={8} lg={6}>
-          <Box sx={{ width: "100%" }}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                aria-label="basic tabs example"
-              >
-                <Tab label="Add Group Expense" {...a11yProps(2)} />
-              </Tabs>
-            </Box>
+    <>
+      <CustomBreadcrumbs
+        pages={[
+          { text: "Home", link: "/homepage" },
+          { text: "Group - Home", link: "/groupexpensehomepage" },
+          { text: "Group Expense", link: "/groupTransaction" },
+        ]}
+      />
+      <div className="tracker-container">
+        <Grid
+          container
+          spacing={1}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: width,
+          }}
+        >
+          <Grid item xs={12} sm={12} md={8} lg={6}>
+            <Box sx={{ width: "100%" }}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  aria-label="basic tabs example"
+                >
+                  <Tab label="Add Group Expense" {...a11yProps(2)} />
+                </Tabs>
+              </Box>
 
-            <CustomTabPanel value={value} index={0}>
-              {!expenseSubmitted && (
-                <GroupExpensePage
-                  handleGroupExpenseSubmit={handleGroupExpenseSubmit}
-                />
-              )}
-              {expenseSubmitted && (
-                <>
-                  <Grid
-                    container
-                    spacing={2}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: "20px",
-                    }}
-                  >
-                    <Grid item xs={12} style={{ textAlign: "center" }}>
-                      <CheckCircleOutlineIcon
-                        color="success"
-                        fontSize="large"
-                      />
-                      <Typography variant="body1" sx={{ ml: 2 }}>
-                        Expense submitted successfully!
-                      </Typography>
+              <CustomTabPanel value={value} index={0}>
+                {!expenseSubmitted && (
+                  <GroupExpensePage
+                    handleGroupExpenseSubmit={handleGroupExpenseSubmit}
+                  />
+                )}
+                {expenseSubmitted && (
+                  <>
+                    <Grid
+                      container
+                      spacing={2}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: "20px",
+                      }}
+                    >
+                      <Grid item xs={12} style={{ textAlign: "center" }}>
+                        <CheckCircleOutlineIcon
+                          color="success"
+                          fontSize="large"
+                        />
+                        <Typography variant="body1" sx={{ ml: 2 }}>
+                          Expense submitted successfully!
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} style={{ textAlign: "center" }}>
+                        <Button
+                          color="primary"
+                          startIcon={<AddIcon />}
+                          sx={{ ml: 2 }}
+                          onClick={handleAddAnotherExpense}
+                        >
+                          Add Another Expense
+                        </Button>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12} style={{ textAlign: "center" }}>
-                      <Button
-                        color="primary"
-                        startIcon={<AddIcon />}
-                        sx={{ ml: 2 }}
-                        onClick={handleAddAnotherExpense}
-                      >
-                        Add Another Expense
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </>
-              )}
-            </CustomTabPanel>
-          </Box>
+                  </>
+                )}
+              </CustomTabPanel>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </div>
+      </div>
+    </>
   );
 };
 
