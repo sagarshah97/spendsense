@@ -27,21 +27,30 @@ const CalendarView = () => {
 		axios
 			.post('/personalTransactions', { userId })
 			.then((response) => {
-				const date = moment
-					.utc(response.data.transactions.date)
-					.tz('America/Halifax');
-				const events = response.data.transactions.map(
-					(transaction) => ({
-						start: new Date(date),
-						end: new Date(date),
+				console.log(
+					'response.data.transactions',
+					response.data.transactions
+				);
+
+				const events = response.data.transactions.map((transaction) => {
+					const date = moment
+						.utc(transaction.date)
+						.tz('America/Halifax')
+						.add(3, 'hours')
+						.toDate();
+
+					return {
+						start: date,
+						end: date,
 						title: `${transaction.category}: ${transaction.amount}`,
 						color:
 							transaction.typeOfTransaction === 'Income'
 								? 'green'
 								: 'red',
 						allDay: true,
-					})
-				);
+					};
+				});
+
 				console.log('Updating events:', events);
 				setEvents(events);
 			})
