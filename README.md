@@ -90,6 +90,3 @@ SpendSense is a revolutionary web application that simplifies personal finance m
 
   - <a href="https://www.freepik.com/free-vector/investor-with-laptop-monitoring-growth-dividends-trader-sitting-stack-money-investing-capital-analyzing-profit-graphs-vector-illustration-finance-stock-trading-investment_10173124.htm#&position=0&from_view=search&track=ais">Image by pch.vector</a> on Freepik
 
-## Acknowledgement
-
-The UI has been inspired from [Nike](https://www.nike.com/ca).
