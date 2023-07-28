@@ -18,7 +18,15 @@ const router = express.Router();
 router.route("/users/register").post(userController.register);
 
 router.route("/users/login").post(userController.login);
-
+router
+  .route("/users/requestPasswordReset")
+  .post(userController.requestPasswordReset);
+router
+  .route("/users/verifyPasswordResetOTP")
+  .post(userController.verifyPasswordResetOTP);
+router.route("/users/updatePassword").post(userController.updatePassword);
+// router.route("/addData").post(addData);
+// router.route("/findData").get(findData);
 router
   .route("/personalTransaction/add")
   .post(personalTransactionController.addPersonalTransaction);
