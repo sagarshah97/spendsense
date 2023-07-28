@@ -9,6 +9,7 @@ const {
   expenseReportData,
 } = require("../controllers/group-transaction");
 const userController = require("../controllers/userController");
+const user = require("../controllers/user");
 const userFriendsController = require("../controllers/user-friends");
 const groupDetailsController = require("../controllers/group-details");
 const { addContactUsRecord } = require("../controllers/contact");
@@ -42,6 +43,9 @@ router
 router
   .route("/personalTransaction/delete/:transactionId")
   .delete(personalTransactionController.deletePersonalTransaction);
+router.route("/userdetails").post(user.userdetails);
+router.route("/getusers").get(user.getusers);
+router.route("/addfriend").post(user.addfriend);
 
 router.route("/addGroup").post(addGroup);
 router.route("/addGroupTransaction").post(addGroupTransaction);

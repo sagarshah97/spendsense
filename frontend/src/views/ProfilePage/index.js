@@ -11,10 +11,53 @@ import {
   List,
   ListItem,
   ListItemText,
+  Button,
+  MenuItem,
+  TextField,
 } from "@mui/material";
 import axios from "axios";
 
 function UserProfile() {
+  const [usersList, setUsersList] = useState([]);
+  const [selectedFriend, setSelectedFriend] = useState("");
+  const [userData, setUserData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    friends: [],
+  });
+  const [loading, setLoading] = useState(true);
+
+  const getUserDetails = async () => {
+    try {
+      const response = await axios.post("/userdetails", {
+        userId: window.sessionStorage.getItem("userId"),
+      });
+      const user = response.data;
+      console.log(response.data);
+      setUserData({
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        friends: user.friends,
+      });
+      setLoading(false);
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        console.error(
+          "Error fetching user data. Server responded with status:",
+          error.response.status
+        );
+        console.error("Error details:", error.response.data);
+      } else if (error.request) {
+        console.error("No response received from the server:", error.request);
+      } else {
+        console.error("Error setting up the request:", error.message);
+      }
+      throw error;
+    }
+  };
   const getNameInitials = (name) => {
     const names = name.split(" ");
 
@@ -55,61 +98,60 @@ function UserProfile() {
     };
   };
 
-  // const jsonData = {
-  //   _id: {
-  //     $oid: "64bf4c863528564d5a7aa3b3",
-  //   },
-  //   username: "john_doe",
-  //   email: "john.doe@example.com",
-  //   name: "John Doe",
-  //   age: 30,
-  //   friends: [
-  //     {
-  //       name: "jane smith",
-  //       email: "jane.smith@example.com",
-  //     },
-  //     {
-  //       name: "Michael ross",
-  //       email: "michael_ross@example.com",
-  //     },
-  //     {
-  //       name: "Michael ross",
-  //       email: "michael_ross@example.com",
-  //     },
-  //     {
-  //       name: "jane smith",
-  //       email: "jane.smith@example.com",
-  //     },
-  //     {
-  //       name: "Michael ross",
-  //       email: "michael_ross@example.com",
-  //     },
-  //     {
-  //       name: "Michael ross",
-  //       email: "michael_ross@example.com",
-  //     },
-  //   ],
-  // };
+  useEffect(() => {
+    getUserDetails();
 
-  const [userData, setUserData] = useState(null);
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
-    const userId = "64c0c0af63cc30d64079845d";
     axios
-      .get(`/user/${userId}`)
+      .get("/getusers")
       .then((response) => {
-        setUserData(response.data.user);
+        setUsersList(response.data);
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
   }, []);
 
+  const handleAddFriend = () => {
+    const isAlreadyFriend = userData.friends.some(
+      (friend) => friend.email === selectedFriend
+    );
+    console.log(selectedFriend);
+
+    if (isAlreadyFriend) {
+      // If selected friend is already a friend, show an alert
+      alert("Selected friend is already a friend.");
+    } else {
+      axios
+        .post("/addfriend", {
+          userId: window.sessionStorage.getItem("userId"),
+          friendId: usersList.find((obj) => obj.email === selectedFriend)._id,
+        })
+        .then((response) => {
+          console.log(response.data);
+          // Handle success, update userData with the new friend
+          // setUserData((prevData) => ({
+          //   ...prevData,
+          //   friends: [...prevData.friends, response.data],
+          // }));
+          getUserDetails();
+          // Clear the selectedFriend state
+          setSelectedFriend("");
+        })
+        .catch((error) => {
+          console.error("Error adding friend:", error);
+        });
+    }
+  };
+
   return (
     <Container maxWidth="lg" style={{ paddingTop: "50px" }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={12} md={12} lg={4} style={{ paddingTop: 0 }}>
-          <Card>
+          <Card style={{ height: "100%" }}>
             <CardMedia
               style={{
                 display: "flex",
@@ -118,11 +160,12 @@ function UserProfile() {
                 paddingTop: "2%",
               }}
             >
-              <Avatar sx={{ height: 200, width: 200 }}>
-                console.log(userData)
-                {stringAvatar(userData.firstname)}
-                style={{ color: "white" }}
-              </Avatar>
+              <Avatar
+                // sx={{ height: 200, width: 200 }}
+                // {...stringAvatar(userData.firstname + userData.lastname)}
+                style={{ height: "150px", width: "150px" }}
+                src="/broken-image.jpg"
+              ></Avatar>
             </CardMedia>
 
             <CardContent>
@@ -131,16 +174,13 @@ function UserProfile() {
               </Typography>
               <List>
                 <ListItem>
-                  <ListItemText primary={`Name: ${userData.firstname}`} />
+                  <ListItemText primary={`First Name: ${userData.firstname}`} />
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary={`Name: ${userData.lastname}`} />
+                  <ListItemText primary={`Last Name: ${userData.lastname}`} />
                 </ListItem>
                 <ListItem>
                   <ListItemText primary={`Email: ${userData.email}`} />
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary={`Age: ${userData.age}`} />
                 </ListItem>
               </List>
             </CardContent>
@@ -156,7 +196,7 @@ function UserProfile() {
           style={{
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "#eeeeee",
+            backgroundColor: "#262626",
             padding: "3%",
           }}
         >
@@ -164,6 +204,7 @@ function UserProfile() {
             style={{
               fontWeight: 100,
               fontSize: "1.5rem",
+              color: "white",
             }}
           >
             Your Friends
@@ -187,9 +228,11 @@ function UserProfile() {
                     <Card key={index} sx={{ maxWidth: 345 }}>
                       <CardHeader
                         avatar={
-                          <Avatar sx={{}} aria-label="recipe">
-                            UN
-                          </Avatar>
+                          <Avatar
+                            sx={{ height: 200, width: 200 }}
+                            {...stringAvatar(user.firstname + user.lastname)}
+                            style={{ color: "white" }}
+                          ></Avatar>
                         }
                         title={user.firstname}
                         subheader={user.email}
@@ -200,6 +243,48 @@ function UserProfile() {
               ))}
             </Grid>
           </div>
+        </Grid>
+
+        <Grid
+          container
+          spacing={2}
+          // justifyContent="center"
+          style={{ paddingTop: "20px" }}
+        >
+          <Grid item xs={12} md={6} lg={8}>
+            <TextField
+              select
+              fullWidth
+              label="Select an email from the dropdown"
+              value={selectedFriend}
+              onChange={(e) => setSelectedFriend(e.target.value)}
+              variant="outlined"
+            >
+              <MenuItem value="">Select an email from the dropdown</MenuItem>
+              {usersList.map((user, index) => (
+                <MenuItem key={index} value={user.email}>
+                  {user.email}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={4}>
+            <Button
+              onClick={handleAddFriend}
+              fullWidth
+              variant="contained"
+              style={{
+                backgroundColor: "#262626",
+                color: "white",
+                height: "56px",
+              }}
+              disabled={!selectedFriend}
+              size="large"
+            >
+              Click to add friend
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </Container>
