@@ -228,7 +228,10 @@ const expenseReportData = async (req, res) => {
     const finalUpdatedExpenseReportData = [];
     for (let i = 0; i < updatedExpenseReportData.length; i++) {
       const data = updatedExpenseReportData[i];
-      if (Number(data.date.split("-")[1]) == Number(month)) {
+      if (
+        Number(data.date.split("-")[1]) == Number(month) &&
+        data.typeOfTransaction !== "Income"
+      ) {
         finalUpdatedExpenseReportData.push(data);
       }
     }
