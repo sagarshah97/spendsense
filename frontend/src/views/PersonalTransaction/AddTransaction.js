@@ -5,14 +5,12 @@ import '../../styles/AddTransaction.css';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Grid } from '@mui/material';
 import ExpensePage from './ExpensePage';
 import IncomePage from './IncomePage';
-import GroupExpensePage from './GroupExpensePage';
 
-const AddTransaction = ({ width = '100%' }) => {
+const AddTransaction = ({ selectedDate, width = '100%' }) => {
 	const [expenses, setExpenses] = useState([]);
 	const [incomes, setIncomes] = useState([]);
 
@@ -63,10 +61,6 @@ const AddTransaction = ({ width = '100%' }) => {
 		setIncomes([...incomes, income]);
 	};
 
-	const handleGroupExpenseSubmit = (expense) => {
-		console.log(expense);
-	};
-
 	return (
 		<div className='tracker-container'>
 			<Grid
@@ -89,30 +83,20 @@ const AddTransaction = ({ width = '100%' }) => {
 							>
 								<Tab label='Add Expense' {...a11yProps(0)} />
 								<Tab label='Add Income' {...a11yProps(1)} />
-								<Tab
-									label='Add Group Expense'
-									{...a11yProps(2)}
-								/>
 							</Tabs>
 						</Box>
 
 						<CustomTabPanel value={value} index={0}>
 							<ExpensePage
+								selectedDate={selectedDate}
 								handleExpenseSubmit={handleExpenseSubmit}
 							/>
 						</CustomTabPanel>
 
 						<CustomTabPanel value={value} index={1}>
 							<IncomePage
+								selectedDate={selectedDate}
 								handleIncomeSubmit={handleIncomeSubmit}
-							/>
-						</CustomTabPanel>
-
-						<CustomTabPanel value={value} index={2}>
-							<GroupExpensePage
-								handleGroupExpenseSubmit={
-									handleGroupExpenseSubmit
-								}
 							/>
 						</CustomTabPanel>
 					</Box>

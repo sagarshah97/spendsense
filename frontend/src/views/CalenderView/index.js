@@ -1,72 +1,100 @@
-import React, { useState, useEffect } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
-import axios from "axios";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Dialog, DialogTitle, DialogContent } from "@mui/material";
-import AddTransaction from "../PersonalTransaction/AddTransaction";
-import {
-  CalendarContainer,
-  DialogContentContainer,
-  StyledDialog,
-} from "./styles";
+import React, { useState, useEffect } from 'react';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import axios from 'axios';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { DialogTitle, DialogContent } from '@mui/material';
+import AddTransaction from '../PersonalTransaction/AddTransaction';
+import { CalendarContainer, StyledDialog } from './styles';
+import './styles.css';
+import moment from 'moment-timezone';
 
 const localizer = momentLocalizer(moment);
 
+const ColoredEvent = ({ event }) => {
+	return (
+		<div style={{ padding: '5px', color: event.color }}>{event.title}</div>
+	);
+};
+
 const CalendarView = () => {
-  const [events, setEvents] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
+	const [events, setEvents] = useState([]);
+	const [open, setOpen] = useState(false);
+	const [selectedDate, setSelectedDate] = useState(null);
+	const [refresh, setRefresh] = useState(false); // new state
+	const userId = sessionStorage.getItem('userId');
 
-  useEffect(() => {
-    axios
-      .get("/personalTransactions")
-      .then((response) => {
-        const events = response.data.transactions.map((transaction) => ({
-          start: new Date(transaction.date),
-          end: new Date(transaction.date),
-          title: `${transaction.category}: ${transaction.amount}`,
-          note: transaction.note,
-        }));
-        setEvents(events);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  }, []);
+	const fetchTransactions = () => {
+		axios
+			.post('/personalTransactions', { userId })
+			.then((response) => {
+				console.log(
+					'response.data.transactions',
+					response.data.transactions
+				);
 
-  const handleSelectSlot = (slotInfo) => {
-    setSelectedDate(slotInfo.start);
-    setOpen(true);
-  };
+				const events = response.data.transactions.map((transaction) => {
+					const date = moment
+						.utc(transaction.date)
+						.tz('America/Halifax')
+						.add(3, 'hours')
+						.toDate();
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+					return {
+						start: date,
+						end: date,
+						title: `${transaction.category}: ${transaction.amount}`,
+						color:
+							transaction.typeOfTransaction === 'Income'
+								? 'green'
+								: 'red',
+						allDay: true,
+					};
+				});
 
-  const dayBoxStyle = {
-    height: "200px", // You can adjust this value to increase or decrease the height
-  };
+				console.log('Updating events:', events);
+				setEvents(events);
+			})
+			.catch((error) => {
+				console.error('There was an error!', error);
+			});
+	};
 
-  return (
-    <CalendarContainer>
-      <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        onSelectSlot={handleSelectSlot}
-        selectable={true}
-        dayPropGetter={() => ({ style: dayBoxStyle })}
-      />
-      <StyledDialog open={open} onClose={handleClose}>
-        <DialogTitle>Add Transaction</DialogTitle>
-        <DialogContent>
-          <AddTransaction selectedDate={selectedDate} />
-        </DialogContent>
-      </StyledDialog>
-    </CalendarContainer>
-  );
+	useEffect(() => {
+		fetchTransactions();
+	}, [refresh]); // dependency array now includes refresh
+
+	const handleSelectSlot = (slotInfo) => {
+		setSelectedDate(slotInfo.start);
+		setOpen(true);
+	};
+
+	const handleClose = () => {
+		setOpen(false);
+		setRefresh(!refresh); // toggles refresh state when dialog is closed
+	};
+
+	return (
+		<CalendarContainer>
+			<Calendar
+				localizer={localizer}
+				events={events}
+				startAccessor='start'
+				endAccessor='end'
+				allDayAccessor='allDay'
+				onSelectSlot={handleSelectSlot}
+				selectable={true}
+				components={{
+					event: ColoredEvent,
+				}}
+			/>
+			<StyledDialog open={open} onClose={handleClose}>
+				<DialogTitle>Add Transaction</DialogTitle>
+				<DialogContent>
+					<AddTransaction selectedDate={selectedDate} />
+				</DialogContent>
+			</StyledDialog>
+		</CalendarContainer>
+	);
 };
 
 export default CalendarView;

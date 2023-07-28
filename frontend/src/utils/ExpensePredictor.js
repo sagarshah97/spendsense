@@ -44,16 +44,4 @@ const linearRegression = (x, y) => {
   };
 };
 
-const meanSquaredError = (actual, predicted) => {
-  const n = actual.length;
-  let sumSquaredErrors = 0;
-
-  for (let i = 0; i < n; i++) {
-    const error = actual[i] - predicted[i];
-    sumSquaredErrors += error * error;
-  }
-
-  return sumSquaredErrors / n;
-};
-
 export default predictTotalExpense;

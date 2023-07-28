@@ -40,6 +40,9 @@ const userSchema = new mongoose.Schema({
   age: {
     type: Number,
   },
+  passwordResetOTP: {
+    type: Number,
+  },
   friends: {
     type: [friendSchema],
     default: [],

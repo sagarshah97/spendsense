@@ -1,18 +1,49 @@
 import React, { useState } from "react";
 import { Container, Typography, TextField, Button, Grid } from "@mui/material";
+import axios from "axios";
+import { Alerts } from "../../utils/Alert";
 
 const ContactUsPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
+  // Alert Start
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("");
+  const alertObj = {
+    alertMessage: alertMessage,
+    alertType: alertType,
+  };
+  const [snackbar, setSnackbar] = React.useState(false);
+  const snackbarOpen = () => {
+    setSnackbar(true);
+  };
+  const snackbarClose = () => {
+    setSnackbar(false);
+  };
+  // Alert End
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name && email && message) {
-      console.log("Form submitted:", { name, email, message });
-      setName("");
-      setEmail("");
-      setMessage("");
+      axios
+        .post("/addContactUsRecord", { name, email, message })
+        .then((response) => {
+          console.log("Form submitted:", { name, email, message });
+          setName("");
+          setEmail("");
+          setMessage("");
+          setAlertMessage(`Submitted`);
+          setAlertType("success");
+          snackbarOpen();
+        })
+        .catch((error) => {
+          console.error(error);
+          setAlertMessage("Something went wrong, Please try again!");
+          setAlertType("error");
+          snackbarOpen();
+        });
     } else {
       console.log("Validation error: Please fill in all fields.");
     }
@@ -67,6 +98,13 @@ const ContactUsPage = () => {
           </Grid>
         </Grid>
       </form>
+      {snackbar && (
+        <Alerts
+          alertObj={alertObj}
+          snackbar={snackbar}
+          snackbarClose={snackbarClose}
+        />
+      )}
     </Container>
   );
 };
