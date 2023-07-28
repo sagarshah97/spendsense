@@ -204,7 +204,7 @@ export default function Register() {
           <Typography
             component="h1"
             variant="h5"
-            style={{ fontSize: "1.5rem", fontWeight: 100 }}
+            style={{ fontSize: "1.5rem", fontWeight: 100, textAlign: "center" }}
           >
             WELCOME!
           </Typography>
