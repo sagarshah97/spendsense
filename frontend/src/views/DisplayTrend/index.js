@@ -13,82 +13,104 @@ import {
 import { Line, Bar, Radar } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import predictTotalExpense from "../../utils/ExpensePredictor";
+import axios from "axios";
 
 const ExpenseGraph = () => {
-  const month = "July";
+  // const month = "July";
   const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    { id: "1", name: "January" },
+    { id: "2", name: "February" },
+    { id: "3", name: "March" },
+    { id: "4", name: "April" },
+    { id: "5", name: "May" },
+    { id: "6", name: "June" },
+    { id: "7", name: "July" },
+    { id: "8", name: "August" },
+    { id: "9", name: "September" },
+    { id: "10", name: "October" },
+    { id: "11", name: "November" },
+    { id: "12", name: "December" },
   ];
-  const monthlyExpenses = [
-    {
-      id: 1,
-      date: "July 1, 2023",
-      expense: 100,
-    },
-    {
-      id: 2,
-      date: "July 3, 2023",
-      expense: 80,
-    },
-    {
-      id: 3,
-      date: "July 4, 2023",
-      expense: 120,
-    },
-    {
-      id: 4,
-      date: "July 5, 2023",
-      expense: 90,
-    },
-    {
-      id: 5,
-      date: "July 10, 2023",
-      expense: 150,
-    },
-    {
-      id: 6,
-      date: "July 12, 2023",
-      expense: 110,
-    },
-  ];
+  // const monthlyExpenses = [
+  //   {
+  //     id: 1,
+  //     date: "July 1, 2023",
+  //     expense: 100,
+  //   },
+  //   {
+  //     id: 2,
+  //     date: "July 3, 2023",
+  //     expense: 80,
+  //   },
+  //   {
+  //     id: 3,
+  //     date: "July 4, 2023",
+  //     expense: 120,
+  //   },
+  //   {
+  //     id: 4,
+  //     date: "July 5, 2023",
+  //     expense: 90,
+  //   },
+  //   {
+  //     id: 5,
+  //     date: "July 10, 2023",
+  //     expense: 150,
+  //   },
+  //   {
+  //     id: 6,
+  //     date: "July 12, 2023",
+  //     expense: 110,
+  //   },
+  // ];
+
+  const [monthlyExpenses, setMonthlyExpenses] = useState([]);
+
   const [selectedMonth, setSelectedMonth] = useState();
   const [chartType, setChartType] = useState("line");
   const [projectedExpense, setProjectedExpense] = useState(0);
   const [isDataAvailable, setIsDataAvailable] = useState(false);
-  const [expenseData, setExpenseData] = useState({
-    labels: monthlyExpenses.map((entry) => entry.date),
-    datasets: [
-      {
-        label: "Expenses",
-        data: monthlyExpenses.map((entry) => entry.expense),
-        fill: true,
-        backgroundColor: "rgba(204, 230, 255, 0.5)",
-        borderColor: "rgba(23,117,209,1)",
-      },
-    ],
-  });
+  const [expenseData, setExpenseData] = useState({});
+
+  const getMonthlyExpenseData = (month) => {
+    console.log(window.sessionStorage.getItem("userId"));
+    console.log(selectedMonth);
+    axios
+      .post("/expenseReportData", {
+        id: window.sessionStorage.getItem("userId"),
+        month,
+      })
+      .then((res) => {
+        if (res.data.length) {
+          const data = res.data;
+          setMonthlyExpenses(data);
+          setExpenseData({
+            labels: data.map((entry) => entry.date),
+            datasets: [
+              {
+                label: "Expenses",
+                data: data.map((entry) => entry.amount),
+                fill: true,
+                backgroundColor: "rgba(204, 230, 255, 0.5)",
+                borderColor: "rgba(23,117,209,1)",
+              },
+            ],
+          });
+          setIsDataAvailable(true);
+        } else {
+          setIsDataAvailable(false);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsDataAvailable(false);
+      });
+  };
 
   const handleMonthChange = (event) => {
-    setSelectedMonth(event.target.value);
-    //todo: Implement logic to fetch expense data for the selected month
-    //todo: Update expenseData state with the fetched data
     console.log(event.target.value);
-    if (event.target.value === month) {
-      setIsDataAvailable(true);
-    } else {
-      setIsDataAvailable(false);
-    }
+    setSelectedMonth(event.target.value);
+    getMonthlyExpenseData(event.target.value);
   };
 
   const handleChartTypeToggle = () => {
@@ -98,7 +120,10 @@ const ExpenseGraph = () => {
 
   const calculateProjectedExpense = () => {
     const projectedExpense = predictTotalExpense(
-      monthlyExpenses.map(({ id, expense }) => ({ day: id, expense }))
+      monthlyExpenses.map(({ date, amount }) => ({
+        day: date,
+        expense: amount,
+      }))
     );
     setProjectedExpense(projectedExpense);
   };
@@ -161,7 +186,7 @@ const ExpenseGraph = () => {
                   onChange={handleMonthChange}
                 >
                   {months.map((month, index) => (
-                    <MenuItem value={month}>{month}</MenuItem>
+                    <MenuItem value={month.id}>{month.name}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
