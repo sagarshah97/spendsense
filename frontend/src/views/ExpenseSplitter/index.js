@@ -1,5 +1,4 @@
-import { React, useState, useEffect } from "react";
-import MemberSearchModal from "../NewGroupModal/index";
+import { useState, useEffect } from "react";
 import {
   FormControl,
   InputLabel,
@@ -10,14 +9,19 @@ import {
   Grid,
   Typography,
   Box,
-  Container,
   Chip,
   Avatar,
 } from "@mui/material";
+import axios from "axios";
 
-const ExpenseSplitter = ({ groups, handleOpenModal }) => {
+const ExpenseSplitter = ({
+  groups,
+  handleOpenModal,
+  handleExpenseSubmitted,
+}) => {
   console.log(groups);
-  const currentUser = "John Wick";
+  const currentUser = sessionStorage.getItem("userId");
+
   const [selectedGroup, setSelectedGroup] = useState("");
   const [splitOption, setSplitOption] = useState("equal");
   const [proportions, setProportions] = useState({});
@@ -45,7 +49,7 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
     const { value } = event.target;
     setProportions((prevProportions) => ({
       ...prevProportions,
-      [member]: value !== "" ? parseFloat(value) : 0,
+      [member._id]: value !== "" ? parseFloat(value) : 0,
     }));
   };
 
@@ -55,7 +59,7 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
 
   const handleSplit = () => {
     const totalExpense = amount;
-    const group = groups.find((grp) => grp.id === selectedGroup);
+    const group = groups.find((grp) => grp._id === selectedGroup);
     if (!group) return;
 
     if (splitOption === "percentage") {
@@ -71,19 +75,21 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
       } else {
         setProportionError(false);
 
-        const splitAmounts = group.members.map((member) => {
-          const proportion = proportions[member];
+        const splitAmounts = group.memberDetails.map((member) => {
+          const memberId = member._id;
+          const proportion = proportions[member._id];
           const amount = (proportion / 100) * totalExpense;
-          return { member, amount };
+          return { memberId, amount };
         });
 
         setSplitAmounts(splitAmounts);
       }
     } else {
-      const splitAmounts = group.members.map((member) => {
-        const proportion = 100 / group.members.length;
+      const splitAmounts = group.memberDetails.map((member) => {
+        const memberId = member._id;
+        const proportion = 100 / group.memberDetails.length;
         const amount = (proportion / 100) * totalExpense;
-        return { member, amount };
+        return { memberId, amount };
       });
 
       setSplitAmounts(splitAmounts);
@@ -132,7 +138,7 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
   };
 
   const renderMembers = () => {
-    const group = groups.find((grp) => grp.id === selectedGroup);
+    const group = groups.find((grp) => grp._id === selectedGroup);
     if (!group) return null;
 
     return (
@@ -140,17 +146,21 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
         <Grid item xs={12}>
           <Typography variant="h6">Members:</Typography>
         </Grid>
-        {group.members.map((member) => (
-          <Grid key={member} item>
+        {group.memberDetails.map((member) => (
+          <Grid key={member._id} item>
             {/* {member} */}
             <Chip
               avatar={
                 <Avatar
-                  {...stringAvatar(member)}
+                  {...stringAvatar(member.name)}
                   style={{ color: "white" }}
                 ></Avatar>
               }
-              label={currentUser === member ? member + " (You)" : member}
+              label={
+                currentUser === member._id
+                  ? member.name + " (You)"
+                  : member.name
+              }
               size="large"
             />
           </Grid>
@@ -202,14 +212,14 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
             <Typography variant="h6">Proportions:</Typography>
           </Grid>
           {groups.map((group) => {
-            if (group.id === selectedGroup) {
-              return group.members.map((member) => (
-                <Grid key={member} item xs={12} sm={6}>
+            if (group._id === selectedGroup) {
+              return group.memberDetails.map((member) => (
+                <Grid key={member._id} item xs={12} sm={6}>
                   <TextField
-                    label={member}
+                    label={member.name}
                     type="number"
                     InputProps={{ inputProps: { min: 0, max: 100 } }}
-                    value={proportions[member] || ""}
+                    value={proportions[member._id] || ""}
                     onChange={(event) => handleProportionChange(event, member)}
                     fullWidth
                   />
@@ -241,9 +251,18 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
         <Grid item xs={12}>
           <Typography variant="h6">Split Amounts:</Typography>
         </Grid>
-        {splitAmounts.map(({ member, amount }) => (
-          <Grid key={member} item xs={12} sm={6}>
-            {`${currentUser === member ? member + " (You)" : member} : `}
+        {splitAmounts.map(({ memberId, amount }) => (
+          <Grid key={memberId} item xs={12} sm={6}>
+            {`${
+              currentUser === memberId
+                ? groups
+                    .find((obj) => obj._id === selectedGroup)
+                    .memberDetails.find((obj) => obj._id === memberId).name +
+                  " (You)"
+                : groups
+                    .find((obj) => obj._id === selectedGroup)
+                    .memberDetails.find((obj) => obj._id === memberId).name
+            } : `}
             <strong>${amount.toFixed(2)}</strong>
           </Grid>
         ))}
@@ -317,6 +336,7 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
   };
 
   const handleSubmit = () => {
+    let paidByUserId = currentUser;
     const groupExpense = {
       group: selectedGroup,
       split: splitOption,
@@ -326,9 +346,17 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
       amount,
       category,
       note,
+      paidByUserId,
     };
-
-    console.log(groupExpense);
+    axios
+      .post("/addGroupTransaction", groupExpense)
+      .then((result) => {
+        console.log("success");
+        handleExpenseSubmitted();
+      })
+      .catch((error) => {
+        console.log("failure");
+      });
   };
 
   useEffect(() => {
@@ -354,14 +382,6 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
   return (
     <>
       <Box style={{}}>
-        {/* <Container
-          maxWidth="md"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        > */}
         <Grid container spacing={2}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
             {renderExpenseInput()}
@@ -377,7 +397,7 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
                 onChange={handleGroupChange}
               >
                 {groups.map((group) => (
-                  <MenuItem key={group.id} value={group.id}>
+                  <MenuItem key={group._id} value={group._id}>
                     {group.name}
                   </MenuItem>
                 ))}
@@ -395,19 +415,10 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
             </Button>
           </Grid>
         </Grid>
-        {/* </Container> */}
       </Box>
       {selectedGroup && (
         <>
           <Box style={{ paddingTop: "3%" }}>
-            {/* <Container
-              maxWidth="md"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            > */}
             <Grid container spacing={2}>
               <Grid item xs={12} lg={12} md={12} sm={12}>
                 {renderMembers()}
@@ -433,17 +444,8 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
                 {renderProportions()}
               </Grid>
             </Grid>
-            {/* </Container> */}
           </Box>
           <Box style={{ paddingTop: "3%" }}>
-            {/* <Container
-              maxWidth="md"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            > */}
             <Grid container spacing={2}>
               <Grid item xs={12} lg={12} md={12} sm={12}>
                 {renderSplitAmounts()}
@@ -459,7 +461,6 @@ const ExpenseSplitter = ({ groups, handleOpenModal }) => {
                 </Button>
               </Grid>
             </Grid>
-            {/* </Container> */}
           </Box>
         </>
       )}

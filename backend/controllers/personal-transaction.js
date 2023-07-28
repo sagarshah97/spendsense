@@ -2,7 +2,7 @@ const Transaction = require("../models/transaction");
 const uuid = require("uuid");
 
 const addPersonalTransaction = async (req, res) => {
-  const { date, amount, category, note, typeOfTransaction } = req.body;
+  const { date, amount, category, note, typeOfTransaction, userId } = req.body;
   const transactionId = uuid.v4();
   const newTransaction = new Transaction({
     date: date,
@@ -11,6 +11,7 @@ const addPersonalTransaction = async (req, res) => {
     note: note,
     typeOfTransaction: typeOfTransaction,
     transactionId: transactionId,
+    userId: userId,
   });
 
   newTransaction
@@ -28,9 +29,10 @@ const getPersonalTransaction = async (req, res) => {
   Transaction.findOne({ transactionId: transactionId })
     .then((transaction) => {
       if (!transaction) {
-        res
-          .status(404)
-          .json({ message: "Transaction not found", success: false });
+        res.status(404).json({
+          message: "Transaction not found",
+          success: false,
+        });
       } else {
         res.status(200).json({
           message: "Transaction successfully retrived",
@@ -45,7 +47,9 @@ const getPersonalTransaction = async (req, res) => {
 };
 
 const getPersonalTransactions = async (req, res) => {
-  Transaction.find()
+  const userId = req.body.userId;
+
+  Transaction.find({ userId: userId })
     .exec()
     .then((transactions) => {
       if (!transactions || !transactions.length) {
@@ -66,25 +70,27 @@ const getPersonalTransactions = async (req, res) => {
 
 const updatePersonalTransaction = async (req, res) => {
   const transactionId = req.params.transactionId;
-  const { date, amount, category, note, typeOfTransaction } = req.body;
+  const { date, amount, category, note, typeOfTransaction, userId } = req.body;
 
   Transaction.findOneAndUpdate(
     { transactionId: transactionId },
-    { date, amount, category, note, typeOfTransaction, transactionId },
+    { date, amount, category, note, typeOfTransaction, transactionId, userId },
     { new: true }
   )
     .then((updatedTransaction) => {
       if (!updatedTransaction) {
-        res
-          .status(404)
-          .json({ message: "Transaction not found", success: false });
+        res.status(404).json({
+          message: "Transaction not found",
+          success: false,
+        });
       } else if (
         !date ||
         !amount ||
         !category ||
         !note ||
         !typeOfTransaction ||
-        !transactionId
+        !transactionId ||
+        !userId
       ) {
         res.status(400).json({
           message: "Missing required Transaction data fields",
@@ -109,9 +115,10 @@ const deletePersonalTransaction = async (req, res) => {
   Transaction.findOneAndDelete({ transactionId: transactionId })
     .then((deletedTransaction) => {
       if (!deletedTransaction) {
-        res
-          .status(404)
-          .json({ message: "Transaction not found", success: false });
+        res.status(404).json({
+          message: "Transaction not found",
+          success: false,
+        });
       } else {
         res.status(200).json({
           message: "Transaction deleted successfully",

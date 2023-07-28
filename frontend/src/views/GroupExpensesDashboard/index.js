@@ -1,148 +1,229 @@
-// Import necessary modules
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-
-// Sample data for demonstration purposes
-const expensesData = {
-  whatIOwe: [
-    { name: "John", amount: 20, group: "xyz" },
-    { name: "Sarah", amount: 10, group: "xyz" },
-    { name: "John", amount: 20, group: "xyz" },
-    { name: "Sarah", amount: 10, group: "xyz" },
-  ],
-  whatImOwed: [
-    { name: "Mike", amount: 15, group: "xyz" },
-    { name: "Emma", amount: 30, group: "xyz" },
-    { name: "Mike", amount: 15, group: "xyz" },
-    { name: "Emma", amount: 30, group: "xyz" },
-  ],
-};
-
-// GroupExpenseDashboard component
+import { Alerts } from "../../utils/Alert";
 const GroupExpenseDashboard = () => {
-  // Calculate total amounts owed and what you are owed
-  const totalOwe = expensesData.whatIOwe.reduce(
-    (total, expense) => total + expense.amount,
-    0
-  );
-  const totalOwed = expensesData.whatImOwed.reduce(
-    (total, expense) => total + expense.amount,
-    0
-  );
+  const [expensesData, setExpensesData] = useState(null);
+  const [totalOwe, setTotalOwe] = useState(null);
+  const [totalOwed, setTotalOwed] = useState(null);
+
+  const userId = sessionStorage.getItem("userId");
+
+  // Alert Start
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("");
+  const alertObj = {
+    alertMessage: alertMessage,
+    alertType: alertType,
+  };
+  const [snackbar, setSnackbar] = React.useState(false);
+  const snackbarOpen = () => {
+    setSnackbar(true);
+  };
+  const snackbarClose = () => {
+    setSnackbar(false);
+  };
+  // Alert End
 
   const handleSettleUp = (entry) => {
-    // Replace this alert with your actual settlement logic
-    alert(
-      `Settling up with ${entry.name} for $${entry.amount} in group ${entry.group}`
-    );
+    axios
+      .post(`/settleUp`, {
+        id: entry.id,
+      })
+      .then((resp) => {
+        if (resp.status === 200) {
+          setAlertMessage(
+            `Settled up with ${entry.name} for $${entry.amount} in group ${entry.group}`
+          );
+          setAlertType("success");
+          snackbarOpen();
+          fetchExpenseData();
+        }
+      })
+      .catch((error) => {
+        console.log(error.config);
+        console.log(error.message);
+        console.log(error.response);
+        setAlertMessage("Something went wrong, Please try again!");
+        setAlertType("error");
+        snackbarOpen();
+      });
   };
 
+  const fetchExpenseData = async () => {
+    try {
+      const response = await axios.get(`/userAmountData/${userId}`);
+      setExpensesData(response.data);
+    } catch (error) {
+      console.error("Error fetching groups:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (expensesData) {
+      const totalOweTemp = expensesData.whatIOwe.reduce(
+        (total, expense) => total + expense.amount,
+        0
+      );
+      const totalOwedTemp = expensesData.whatImOwed.reduce(
+        (total, expense) => total + expense.amount,
+        0
+      );
+      setTotalOwe(totalOweTemp);
+      setTotalOwed(totalOwedTemp);
+    }
+  }, [expensesData]);
+
+  useEffect(() => {
+    fetchExpenseData();
+  }, []);
   return (
-    <div style={{ maxWidth: "75%", margin: "0 auto" }}>
+    <div style={{ maxWidth: "75%", margin: "0 auto", paddingBottom: "15px" }}>
       <Typography variant="h4" align="center" gutterBottom>
         Group Expenses Dashboard
       </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <Card elevation={3}>
-            <CardContent>
-              <Typography variant="h5" sx={{ paddingBottom: 2 }}>
-                What I Owe - Total:{" "}
-                <span style={{ color: "red" }}>${totalOwe}</span>
-              </Typography>
-              {expensesData.whatIOwe.length === 0 ? (
-                <Typography
-                  variant="body1"
-                  style={{ marginTop: "10px" }}
-                  align="center"
-                >
-                  No records found.
+      {expensesData && (
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <Card elevation={3}>
+              <CardContent>
+                <Typography variant="h5" sx={{ paddingBottom: 2 }}>
+                  What I Owe - Total:{" "}
+                  <span style={{ color: "red" }}>${totalOwe}</span>
                 </Typography>
-              ) : (
-                expensesData.whatIOwe.map((expense, index) => (
-                  <Card key={index} variant="outlined" sx={{ marginBottom: 2 }}>
-                    <CardContent
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography variant="body1">
-                        I owe {expense.name}{" "}
-                        <span style={{ color: "red" }}>${expense.amount}</span>{" "}
-                        in group {expense.group}
-                      </Typography>
-                      <Button
-                        onClick={() => handleSettleUp(expense)}
-                        variant="contained"
-                        color="primary"
-                        endIcon={<MonetizationOnIcon />}
-                        size="small"
-                      >
-                        Settle Up
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Card elevation={3}>
-            <CardContent>
-              <Typography variant="h5" sx={{ paddingBottom: 2 }}>
-                What I'm Owed - Total:{" "}
-                <span style={{ color: "green" }}>${totalOwed}</span>
-              </Typography>
-              {expensesData.whatImOwed.length === 0 ? (
-                <Typography
-                  variant="body1"
-                  style={{ marginTop: "10px" }}
-                  align="center"
-                >
-                  No records found.
+                {expensesData.whatIOwe.length === 0 ? (
+                  <Typography
+                    variant="body1"
+                    style={{ marginTop: "10px" }}
+                    align="center"
+                  >
+                    No records found.
+                  </Typography>
+                ) : (
+                  expensesData.whatIOwe.map((expense, index) => (
+                    <Grid container spacing={2}>
+                      {expensesData.whatImOwed.map((expense, index) => (
+                        <>
+                          <Grid item xs={9}>
+                            <Typography variant="body1">
+                              I owe {expense.name}{" "}
+                              <span style={{ color: "red" }}>
+                                ${expense.amount}
+                              </span>{" "}
+                              in group {expense.group} for {expense.description}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={3}>
+                            <Button
+                              onClick={() => handleSettleUp(expense)}
+                              variant="contained"
+                              color="primary"
+                              endIcon={<MonetizationOnIcon />}
+                              size="small"
+                            >
+                              Settle
+                            </Button>
+                          </Grid>
+                        </>
+                      ))}
+                    </Grid>
+                    // <Card
+                    //   key={index}
+                    //   variant="outlined"
+                    //   sx={{ marginBottom: 2 }}
+                    // >
+                    //   <CardContent
+                    //     sx={{
+                    //       display: "flex",
+                    //       justifyContent: "space-between",
+                    //       alignItems: "center",
+                    //     }}
+                    //   >
+                    //     <Typography variant="body1">
+                    //       I owe {expense.name}{" "}
+                    //       <span style={{ color: "red" }}>
+                    //         ${expense.amount}
+                    //       </span>{" "}
+                    //       in group {expense.group} for {expense.description}
+                    //     </Typography>
+
+                    //     <Tooltip title="Settle Up">
+                    //       <IconButton
+                    //         onClick={() => handleSettleUp(expense)}
+                    //         color="primary"
+                    //         size="small"
+                    //       >
+                    //         <MonetizationOnIcon />
+                    //       </IconButton>
+                    //     </Tooltip>
+                    //   </CardContent>
+                    // </Card>
+                  ))
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Card elevation={3}>
+              <CardContent>
+                <Typography variant="h5" sx={{ paddingBottom: 2 }}>
+                  What I'm Owed - Total:{" "}
+                  <span style={{ color: "green" }}>${totalOwed}</span>
                 </Typography>
-              ) : (
-                expensesData.whatImOwed.map((expense, index) => (
-                  <Card key={index} variant="outlined" sx={{ marginBottom: 2 }}>
-                    <CardContent
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography variant="body1">
-                        {expense.name} owes me{" "}
-                        <span style={{ color: "green" }}>
-                          ${expense.amount}
-                        </span>{" "}
-                        in group {expense.group}
-                      </Typography>
-                      <Button
-                        onClick={() => handleSettleUp(expense)}
-                        variant="contained"
-                        color="primary"
-                        endIcon={<MonetizationOnIcon />}
-                        size="small"
-                      >
-                        Settle Up
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </CardContent>
-          </Card>
+                {expensesData.whatImOwed.length === 0 ? (
+                  <Typography
+                    variant="body1"
+                    style={{ marginTop: "10px" }}
+                    align="center"
+                  >
+                    No records found.
+                  </Typography>
+                ) : (
+                  <Grid container spacing={2}>
+                    {expensesData.whatImOwed.map((expense, index) => (
+                      <>
+                        <Grid item xs={9}>
+                          <Typography variant="body1">
+                            {expense.name} owes me{" "}
+                            <span style={{ color: "green" }}>
+                              ${expense.amount}
+                            </span>{" "}
+                            in group {expense.group} for {expense.description}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={3}>
+                          <Button
+                            onClick={() => handleSettleUp(expense)}
+                            variant="contained"
+                            color="primary"
+                            endIcon={<MonetizationOnIcon />}
+                            size="small"
+                          >
+                            Settle
+                          </Button>
+                        </Grid>
+                      </>
+                    ))}
+                  </Grid>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
+      {snackbar && (
+        <Alerts
+          alertObj={alertObj}
+          snackbar={snackbar}
+          snackbarClose={snackbarClose}
+        />
+      )}
     </div>
   );
 };

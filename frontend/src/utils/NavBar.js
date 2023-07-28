@@ -20,7 +20,7 @@ import logo from "../assets/logoWhite.png";
 const drawerWidth = 240;
 const navItems = ["Home", "Contact", "FAQ", "Logout"];
 
-export default function DrawerAppBar(props) {
+export default function NavBar(props) {
   const navigate = useNavigate();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -91,9 +91,21 @@ export default function DrawerAppBar(props) {
             <Typography
               variant="h6"
               component="div"
-              sx={{ flexGrow: 1, display: { xs: "none", sm: "block" }, pt: 1 }}
+              sx={{
+                flexGrow: 1,
+                display: { xs: "none", sm: "block" },
+                pt: 1,
+              }}
             >
-              <img src={logo} alt="" width={150} />
+              <img
+                src={logo}
+                alt=""
+                width={150}
+                onClick={() => {
+                  navigate("/homepage");
+                }}
+                style={{ cursor: "pointer" }}
+              />
             </Typography>
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
               {navItems.map((item) => (

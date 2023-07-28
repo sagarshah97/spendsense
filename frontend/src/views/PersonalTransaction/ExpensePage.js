@@ -11,12 +11,14 @@ import {
 import Slider from "react-slick";
 import axios from "axios";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 const ExpensePage = ({ handleExpenseSubmit, selectedDate }) => {
   const [amount, setAmount] = useState(0);
   const [category, setCategory] = useState("");
   const [note, setNote] = useState("");
   const [date, setDate] = useState("");
+  const navigate = useNavigate();
 
   const handleAmountChange = (event) => {
     setAmount(event.target.value);
@@ -34,12 +36,13 @@ const ExpensePage = ({ handleExpenseSubmit, selectedDate }) => {
     setDate(event.target.value);
   };
 
-  // Changes made by Harsh Vaghani
   useEffect(() => {
     if (selectedDate) {
       setDate(moment(selectedDate).format("YYYY-MM-DD"));
     }
   }, [selectedDate]);
+
+  const userId = sessionStorage.getItem("userId");
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -50,20 +53,20 @@ const ExpensePage = ({ handleExpenseSubmit, selectedDate }) => {
         amount,
         category,
         note,
-        typeOfTransaction: "Expense", // Set the type of transaction
+        typeOfTransaction: "Expense",
+        userId,
       })
       .then((response) => {
         console.log("Expense transaction added:", response.data);
-        // Handle any success actions or feedback here
       })
       .catch((error) => {
         console.error(error);
-        // Handle any error actions or feedback here
       });
     setAmount(0);
     setCategory("");
     setNote("");
     setDate("");
+    navigate("/personal");
   };
 
   const settings = {
@@ -84,30 +87,22 @@ const ExpensePage = ({ handleExpenseSubmit, selectedDate }) => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  {/* <InputLabel htmlFor="date">Date</InputLabel> */}
                   <TextField
                     type="date"
                     id="date"
                     value={date}
                     onChange={handleDateChange}
-                    // InputLabelProps={{
-                    //   shrink: true,
-                    // }}
                   />
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  {/* <InputLabel htmlFor="amount">Amount</InputLabel> */}
                   <TextField
                     type="number"
                     label="Amount"
                     id="amount"
                     value={amount}
                     onChange={handleAmountChange}
-                    // InputLabelProps={{
-                    //   shrink: true,
-                    // }}
                   />
                 </FormControl>
               </Grid>
@@ -130,16 +125,14 @@ const ExpensePage = ({ handleExpenseSubmit, selectedDate }) => {
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth variant="outlined">
-                  <InputLabel htmlFor="note">Note</InputLabel>
                   <TextField
+                    type="text"
+                    label="Note"
                     id="note"
                     value={note}
                     onChange={handleNoteChange}
                     multiline
                     rows={4}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
                   />
                 </FormControl>
               </Grid>

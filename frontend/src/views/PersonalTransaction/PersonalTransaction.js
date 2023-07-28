@@ -14,9 +14,13 @@ import {
   Grid,
   Container,
   IconButton,
+  ToggleButtonGroup,
+  ToggleButton,
+  Box,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CalendarView from "../CalenderView";
 
 const StyledTableContainer = styled(TableContainer)({
   width: "80%",
@@ -40,11 +44,19 @@ const StyledExpenseRow = styled(TableRow)({
 const PersonalTransaction = () => {
   const [data, setData] = useState([]);
   const [total, setTotal] = useState("");
+  const [view, setView] = useState("list");
+
+  const userId = sessionStorage.getItem("userId");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch data from backend API
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
     axios
-      .get("/personalTransactions")
+      .post("/personalTransactions", { userId })
       .then((response) => {
         setTotal(
           response.data.transactions.reduce(
@@ -62,47 +74,19 @@ const PersonalTransaction = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  };
 
   const handleDelete = (transactionId) => {
-    console.log(transactionId);
-    // Delete the transaction from the backend API
     axios
       .delete(`/personalTransaction/delete/${transactionId}`)
       .then((response) => {
         console.log("Transaction deleted:", response.data);
-        // Refresh the data by refetching it from the backend API
-        refreshData();
+        fetchData();
       })
       .catch((error) => {
         console.error(error);
       });
   };
-
-  const refreshData = () => {
-    axios
-      .get("/personalTransactions")
-      .then((response) => {
-        setTotal(
-          response.data.transactions.reduce(
-            (total, transaction) =>
-              transaction.typeOfTransaction === "Income"
-                ? total + transaction.amount
-                : total - transaction.amount,
-            0
-          )
-        );
-        setData(
-          response.data.transactions.sort((a, b) => (a.date > b.date ? 1 : -1))
-        );
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  // Get the navigate function from React Router
-  const navigate = useNavigate();
 
   return (
     <div>
@@ -111,115 +95,90 @@ const PersonalTransaction = () => {
         maxWidth="md"
         style={{
           display: "flex",
+          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           marginBottom: "2%",
         }}
-      >
-        <Grid item xs={12} sm={12} md={12} lg={12}>
-          <Button
-            variant="contained"
-            onClick={() => {
-              navigate("/addTransaction");
-            }}
-            fullWidth
-          >
-            Personal Expense Tracker
-          </Button>
-        </Grid>
-      </Container>
-      <StyledTableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <StyledTableCellHeader>Date</StyledTableCellHeader>
-              <StyledTableCellHeader>Amount</StyledTableCellHeader>
-              <StyledTableCellHeader>Category</StyledTableCellHeader>
-              <StyledTableCellHeader>Note</StyledTableCellHeader>
-              <StyledTableCellHeader>Actions</StyledTableCellHeader>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map((item) => (
-              <TableRow
-                key={item._id}
-                className={`transaction-${item.typeOfTransaction.toLowerCase()} ${
-                  item.typeOfTransaction === "Income"
-                    ? "incomeRow"
-                    : "expenseRow"
-                }`}
-                component={
-                  item.typeOfTransaction === "Income"
-                    ? StyledIncomeRow
-                    : StyledExpenseRow
-                }
-              >
-                <TableCell>
-                  {new Date(item.date).toISOString().split("T")[0]}
-                </TableCell>
-                <TableCell>{"$" + item.amount}</TableCell>
-                <TableCell>{item.category}</TableCell>
-                <TableCell>{item.note}</TableCell>
-                <TableCell>
-                  {/* <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      const route =
-                        item.typeOfTransaction === "Expense"
-                          ? "/update/expense"
-                          : "/update/income";
-                      navigate(route, {
-                        state: { transactionId: item.transactionId },
-                      });
-                    }}
-                  > */}
-                  <IconButton
-                    aria-label="edit"
-                    onClick={() => {
-                      const route =
-                        item.typeOfTransaction === "Expense"
-                          ? "/update/expense"
-                          : "/update/income";
-                      navigate(route, {
-                        state: {
-                          transactionId: item.transactionId,
-                        },
-                      });
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-
-                  {/* </Button> */}
-                  {/* <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleDelete(item.transactionId)}
-                  >
-                    Delete
-                  </Button> */}
-                  <IconButton
-                    aria-label="delete"
-                    onClick={() => handleDelete(item.transactionId)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
+      ></Container>
+      {view === "list" ? (
+        <StyledTableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <StyledTableCellHeader>Date</StyledTableCellHeader>
+                <StyledTableCellHeader>Amount</StyledTableCellHeader>
+                <StyledTableCellHeader>Category</StyledTableCellHeader>
+                <StyledTableCellHeader>Note</StyledTableCellHeader>
+                <StyledTableCellHeader>Actions</StyledTableCellHeader>
               </TableRow>
-            ))}
-            <TableRow>
-              <TableCell>Total</TableCell>
-              <TableCell style={{ color: total >= 0 ? "green" : "red" }}>
-                {"$" + total}
-              </TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </StyledTableContainer>
+            </TableHead>
+            <TableBody>
+              {data.map((item) => (
+                <TableRow
+                  key={item._id}
+                  className={`transaction-${item.typeOfTransaction.toLowerCase()} ${
+                    item.typeOfTransaction === "Income"
+                      ? "incomeRow"
+                      : "expenseRow"
+                  }`}
+                  component={
+                    item.typeOfTransaction === "Income"
+                      ? StyledIncomeRow
+                      : StyledExpenseRow
+                  }
+                >
+                  <TableCell>
+                    {new Date(item.date).toISOString().split("T")[0]}
+                  </TableCell>
+                  <TableCell>{"$" + item.amount}</TableCell>
+                  <TableCell>{item.category}</TableCell>
+                  <TableCell>{item.note}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      aria-label="edit"
+                      onClick={() => {
+                        const route =
+                          item.typeOfTransaction === "Expense"
+                            ? "/update/expense"
+                            : "/update/income";
+                        navigate(route, {
+                          state: {
+                            transactionId: item.transactionId,
+                          },
+                        });
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      aria-label="delete"
+                      onClick={() => handleDelete(item.transactionId)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+              <TableRow>
+                <TableCell>Balance</TableCell>
+                <TableCell
+                  style={{
+                    color: total >= 0 ? "green" : "red",
+                  }}
+                >
+                  {total > 0 ? "$" + total : "- $" + -1 * total}
+                </TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </StyledTableContainer>
+      ) : (
+        <CalendarView style={{ height: "500px" }} />
+      )}
     </div>
   );
 };
