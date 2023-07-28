@@ -13,18 +13,29 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import Footer from "./Footer";
 import logo from "../assets/logoWhite.png";
+import { isTokenValid } from "../views/Login/auth";
 
 const drawerWidth = 240;
-const navItems = ["Home", "Contact", "FAQ", "Logout"];
 
 export default function NavBar(props) {
   const navigate = useNavigate();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
+  const location = useLocation();
+  const isValidToken = isTokenValid();
+
+  let navItems = [];
+  if (isValidToken) {
+    navItems = ["Home", "Contact", "FAQ", "Pricing", "Logout"];
+  } else {
+    navItems = ["Contact", "FAQ", "Pricing", "Login"];
+  }
+  console.log(navItems);
+  //const navItems = ["Home", "Contact", "FAQ", "Logout"];
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
@@ -36,7 +47,9 @@ export default function NavBar(props) {
       navigate("/contact");
     } else if (value === "FAQ") {
       navigate("/faq");
-    } else if (value === "Logout") {
+    } else if (value === "Pricing") {
+      navigate("/pricing");
+    } else if (value === "Logout" || value === "Login") {
       sessionStorage.clear();
       navigate("/");
     }

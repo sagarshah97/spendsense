@@ -22,6 +22,7 @@ import GroupExpenseHomepage from "./views/GroupExpenseHomepage";
 import PersonalExpenseHomepage from "./views/PersonalExpenseHomepage";
 import AnalyticsHomepage from "./views/AnalyticsHomepage";
 import GroupTransaction from "./views/GroupTransaction";
+import PricingPage from "./views/Pricing";
 
 const Router = () => {
   const location = useLocation();
@@ -29,14 +30,18 @@ const Router = () => {
   console.log("isValidToken", isValidToken);
   return (
     <Routes location={location} key={location.pathname}>
-      <Route path="/" element={<Login />} />
-      <Route path="/register" element={<Registration />} />
-      <Route path="/passwordreset" element={<Password />} />
+      <Route path="/" element={<NavBar />}>
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/passwordreset" element={<Password />} />
+        <Route path="/register" element={<Registration />} />
+      </Route>
       {isValidToken ? (
         <Route path="/" element={<NavBar />}>
           <Route path="/homepage" element={<LandingPage />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/faq" element={<FAQ />} />
+
           <Route path="/personal" element={<PersonalTransaction />} />
           <Route path="/addTransaction" element={<AddTransaction />} />
           <Route path="/update/Expense" element={<UpdateExpensePage />} />
