@@ -52,7 +52,7 @@ const CalendarView = () => {
 
 	useEffect(() => {
 		fetchTransactions();
-	}, [refresh, events]); // dependency array now includes refresh
+	}, [refresh]); // dependency array now includes refresh
 
 	const handleSelectSlot = (slotInfo) => {
 		setSelectedDate(slotInfo.start);
