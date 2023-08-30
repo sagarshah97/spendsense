@@ -4,7 +4,7 @@ import axios from "axios";
 import ScrollToTop from "./utils/ScrollToTop";
 
 function App() {
-  axios.defaults.baseURL = "https://ti-backend-uvfq.onrender.com";
+  axios.defaults.baseURL = process.env.REACT_APP_API_BASEURL;
   return (
     <>
       <BrowserRouter>

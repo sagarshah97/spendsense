@@ -1,14 +1,13 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const config = require("./config");
 
 mongoose
-	.connect(
-		'mongodb+srv://harshvaghani:adminadmin@projectti.zpzobjv.mongodb.net/'
-	)
-	.then(() => {
-		console.log('connected to MongoDB');
-	})
-	.catch((error) => {
-		console.log(error);
-	});
+  .connect(config.mongoDBConnectionString)
+  .then(() => {
+    console.log("connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
 module.exports = mongoose;
