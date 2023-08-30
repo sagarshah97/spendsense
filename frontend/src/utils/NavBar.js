@@ -35,7 +35,6 @@ export default function NavBar(props) {
     navItems = ["Contact", "FAQ", "Pricing", "Login"];
   }
   console.log(navItems);
-  //const navItems = ["Home", "Contact", "FAQ", "Logout"];
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };

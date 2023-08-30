@@ -14,7 +14,7 @@ import {
 import axios from "axios";
 
 const MemberSearchModal = ({ open, handleClose, handleGroupSubmit }) => {
-  const loggedInUserId = sessionStorage.getItem("userId"); //todo: get from session storage
+  const loggedInUserId = sessionStorage.getItem("userId");
   const [groupName, setGroupName] = useState("");
   const [memberEmail, setMemberEmail] = useState("");
   const [members, setMembers] = useState([]);

@@ -186,11 +186,6 @@ function UserProfile() {
         })
         .then((response) => {
           console.log(response.data);
-          // Handle success, update userData with the new friend
-          // setUserData((prevData) => ({
-          //   ...prevData,
-          //   friends: [...prevData.friends, response.data],
-          // }));
           getUserDetails();
           // Clear the selectedFriend state
           setSelectedFriend("");
@@ -215,8 +210,6 @@ function UserProfile() {
               }}
             >
               <Avatar
-                // sx={{ height: 200, width: 200 }}
-                // {...stringAvatar(userData.firstname + userData.lastname)}
                 style={{ height: "150px", width: "150px" }}
                 src="/broken-image.jpg"
               ></Avatar>
@@ -315,22 +308,6 @@ function UserProfile() {
               error={Boolean(emailError)}
               helperText={emailError}
             />
-
-            {/* <TextField
-              select
-              fullWidth
-              label="Select an email from the dropdown"
-              value={selectedFriend}
-              onChange={(e) => setSelectedFriend(e.target.value)}
-              variant="outlined"
-            >
-              <MenuItem value="">Select an email from the dropdown</MenuItem>
-              {usersList.map((user, index) => (
-                <MenuItem key={index} value={user.email}>
-                  {user.email}
-                </MenuItem>
-              ))}
-            </TextField> */}
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
