@@ -1,5 +1,5 @@
 const mongoDBConnectionString =
-  "mongodb+srv://harshvaghani:adminadmin@projectti.zpzobjv.mongodb.net/";
+  "<YOUR_MONGODB_CONNECTION_STRING_GOES_HERE>";
 
 module.exports = {
   mongoDBConnectionString,
