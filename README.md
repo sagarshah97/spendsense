@@ -4,7 +4,6 @@ SpendSense is a revolutionary web application that simplifies personal finance m
 
 ## Links
 
-- _Git URL_: <https://git.cs.dal.ca/spshah/s23_technology_innovation_team5>
 - _Netlify URL (Deployed site)_: <https://spendsense-app.netlify.app/>
 
 ## Authors
