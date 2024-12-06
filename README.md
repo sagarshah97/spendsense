@@ -1,6 +1,22 @@
 # SPENDSENSE
 
-SpendSense is a revolutionary web application that simplifies personal finance management and shared expense tracking. Through extensive research and user surveys, our team identified the need for a centralized and user-friendly platform to enhance financial processes and user experience. With SpendSense, users can effortlessly track their income, expenses, and budgets, while also managing shared expenses within groups. The platform offers a clear and intuitive interface, allowing users to input their financial data, analyze spending trends, and set budget goals. It also promotes transparency and eliminates disputes by enabling users to create and manage groups, add expenses, and split costs among members. SpendSense's secure payment feature ensures convenient settlement of financial obligations within the platform. In summary, SpendSense provides a comprehensive and user-friendly solution for personal finance management and shared expense tracking. It streamlines financial processes, enhances transparency, and improves the overall user experience, catering to the evolving needs of individuals and groups.
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![MUI](https://img.shields.io/badge/MUI-%230081CB.svg?style=for-the-badge&logo=mui&logoColor=white)
+![Chart.js](https://img.shields.io/badge/chart.js-F5788D.svg?style=for-the-badge&logo=chart.js&logoColor=white)
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+
+SpendSense is a revolutionary web application that simplifies personal finance management and shared expense tracking. Through extensive research and user surveys, our team identified the need for a centralized and user-friendly platform to enhance financial processes and user experience. With SpendSense, users can 
+- Effortlessly track their income, expenses, and budgets.
+- Manage shared expenses within groups.
+- Input their financial data, analyze spending trends, and set budget goals by using a clear and intuitive interface.
+- Create and manage groups, add expenses, and split costs among members, thus promoting transparency and eliminating disputes.
+
+SpendSense's secure payment feature ensures convenient settlement of financial obligations within the platform. In summary, SpendSense provides a comprehensive and user-friendly solution for personal finance management and shared expense tracking. It streamlines financial processes, enhances transparency, and improves the overall user experience, catering to the evolving needs of individuals and groups.
+
+![Version](https://img.shields.io/badge/version-0.1.0-80b918)
+![ReactVersion](https://img.shields.io/badge/react-v18.3-0077b6)
+![NodeVersion](https://img.shields.io/badge/node-v16.2-0077b6)
 
 ## Links
 
