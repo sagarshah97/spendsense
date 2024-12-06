@@ -18,11 +18,11 @@ SpendSense's secure payment feature ensures convenient settlement of financial o
 ![ReactVersion](https://img.shields.io/badge/react-v18.3-0077b6)
 ![NodeVersion](https://img.shields.io/badge/node-v16.2-0077b6)
 
-## Links
+## ![Links](https://api.iconify.design/fluent-emoji-high-contrast/link.svg?height=28&color=%23ba3329) Links
 
 - _Netlify URL (Deployed site)_: <https://spendsense-app.netlify.app/>
 
-## Authors
+## ![Authors](https://api.iconify.design/ion/people-sharp.svg?height=28&color=%23ba3329) Authors
 
 - [Aayush Yogesh Pandya](ay923755@dal.ca)
 - [Harsh Vaghani](harsh.vaghani@dal.ca)
@@ -32,7 +32,7 @@ SpendSense's secure payment feature ensures convenient settlement of financial o
 - [Sagar Paresh Shah](sg355741@dal.ca)
 - [Siddhesh Salve](sd264348@dal.ca)
 
-## Pre-requisites
+## ![Pre-requisites](https://api.iconify.design/fluent-mdl2/field-required.svg?height=28&color=%23ba3329) Pre-requisites
 
 - Download and install [Node.js](https://nodejs.org/en/download)
 - Clone this repository.
@@ -40,15 +40,15 @@ SpendSense's secure payment feature ensures convenient settlement of financial o
   - `npm install`
   - `npm start`
 
-## Frontend Deployment
+## ![Frontend Deployment](https://api.iconify.design/fluent/card-ui-20-filled.svg?height=28&color=%23ba3329) Frontend Deployment
 
 - The frontend of the web application has been deployed on [Netlify](https://app.netlify.com/)
 
-## Backend Deployment
+## ![Backend Deployment](https://api.iconify.design/fluent/document-settings-20-regular.svg?height=28&color=%23ba3329) Backend Deployment
 
 - The backend of the web application has been deployed on [Render](https://render.com/)
 
-## Built With
+## ![Built With](https://api.iconify.design/fluent/wrench-20-filled.svg?height=28&color=%23ba3329) Built With
 
 - [React](https://reactjs.org/) - Web framework
 - [React Material UI](https://mui.com/material-ui/) - Web Component Library
@@ -58,12 +58,12 @@ SpendSense's secure payment feature ensures convenient settlement of financial o
 - [Mongoose](https://mongoosejs.com/docs/) - Object mapping package between MongoDB and Backend schema
 - [Mongodb](https://www.mongodb.com/)- Data storage
 
-## Sample Login Credentials
+## ![Sample Login Credentials](https://api.iconify.design/fluent/person-square-32-filled.svg?height=28&color=%23ba3329) Sample Login Credentials
 
 - Username: `nk561034@dal.ca`
 - Password: `Spendsensepass123*`
 
-## References
+## ![References](https://api.iconify.design/codicon/references.svg?height=28&color=%23ba3329) References
 
 ### Frontend
 
@@ -82,7 +82,7 @@ SpendSense's secure payment feature ensures convenient settlement of financial o
 - [React Material Icons](https://mui.com/material-ui/material-icons/) was used for the icons.
 - [Axios](https://www.npmjs.com/package/axios) was used to make API requests.
 
-## Images and Icons
+## ![Images and Icons](https://api.iconify.design/ion/images.svg?height=28&color=%23ba3329) Images and Icons
 
 - [The Noun Project](https://thenounproject.com/): All the below icons have been adapted from The Noun Project.
 
